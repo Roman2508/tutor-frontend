@@ -1,0 +1,84 @@
+.wrapper {
+  display: flex;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.left-col {
+  max-width: 66.66666%;
+}
+
+.right-col {
+  max-width: 33.333333%;
+  width: 100%;
+  text-align: center;
+}
+
+.left-col-top {
+  display: flex;
+}
+
+.avatar {
+  min-width: 100px;
+  height: 100px;
+  background-color: var(--primary-400);
+  margin-right: 20px;
+}
+
+.tutor-info {
+  margin-right: 20px;
+}
+
+.tutor-info-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tutor-name {
+  color: black;
+  font-size: 24px;
+  margin: 0;
+}
+
+.add-to-favourite {
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.8);
+  }
+}
+
+.tutor-info-desc {
+  text-align: justify;
+}
+
+.tutor-actions {
+  text-align: center;
+}
+
+.tutor-action-button {
+  width: 300px;
+}
+
+.lesson-price-title {
+  margin: 10px 0 0;
+  display: block;
+  text-align: center;
+  font-size: 22px;
+}
+
+.lesson-price-desc {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.lesson-rating {
+  display: block;
+  text-align: center;
+}
+
+.left-col-bottom {
+}

@@ -1,11 +1,28 @@
-import { useState } from 'react'
-
-import './App.css'
+import { PrimeReactProvider } from 'primereact/api'
+import Layout from './components/layout/Layout'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
+import HomePage from './pages/HomePage/HomePage'
+import AuthPage from './pages/AuthPage/AuthPage'
+import TutorPage from './pages/TutorPage/TutorPage'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const value = {
+    ripple: true,
+  }
 
-  return <div>111</div>
+  return (
+    <PrimeReactProvider value={value}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/tutor" element={<TutorPage />} />
+            <Route path="/auth" element={<AuthPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </PrimeReactProvider>
+  )
 }
 
 export default App

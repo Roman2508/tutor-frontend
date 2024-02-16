@@ -1,0 +1,17 @@
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.wrapper {
+  display: flex;
+  align-items: start;
+}
+
+.tutors {
+  display: flex;
+  flex-direction: column;
+  width: 66.6666666%;
+  margin-right: 20px;
+}

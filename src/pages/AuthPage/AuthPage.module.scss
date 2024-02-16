@@ -1,0 +1,49 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.content {
+  text-align: center;
+  width: 360px;
+  margin: 20px 0;
+}
+
+.input {
+  margin-bottom: 20px;
+  width: 100%;
+  position: relative;
+
+  input {
+    width: 100%;
+  }
+
+  & svg {
+    position: absolute;
+    right: 0px;
+  }
+}
+
+.full-size-button {
+  width: 100%;
+}
+
+.divider-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.divider {
+  flex: 1;
+  height: 0.8px;
+  width: 100%;
+  background-color: rgb(215, 215, 215);
+}
+
+.link {
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
