@@ -1,0 +1,23 @@
+.top {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.info {
+  margin-left: 10px;
+}
+
+.name {
+  margin: 0;
+  font-size: 16px;
+}
+
+.created-at {
+  font-size: 13px;
+}
+
+.comment {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}

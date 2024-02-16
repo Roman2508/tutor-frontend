@@ -1,0 +1,39 @@
+.container {
+  padding: 20px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.contacts {
+  width: 100%;
+  max-width: 33.33333%;
+  margin-right: 20px;
+}
+
+.chat {
+  width: 100%;
+  max-width: 66.66666%;
+}
+
+.chat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-top-data {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contacts-wrapper {
+  // max-height: 75vh;
+  height: 100%;
+  max-height: calc(100vh - 200px);
+  overflow: auto;
+}

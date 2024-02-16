@@ -1,0 +1,30 @@
+.wrapper {
+}
+
+.messages {
+  //   max-height: 43vh;
+  height: 100%;
+  max-height: calc(100vh - 400px);
+  overflow-y: auto;
+}
+
+.message-wrapper {
+  display: flex;
+
+  &.own-comment {
+    justify-content: end;
+  }
+}
+
+.message {
+  background-color: var(--surface-100);
+  padding: 10px;
+  max-width: 70%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+
+  &.own-comment {
+    text-align: end;
+    background-color: var(--cyan-50);
+  }
+}
