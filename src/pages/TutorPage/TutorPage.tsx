@@ -1,29 +1,29 @@
 import React from "react"
-import dayjs from "dayjs"
-import uk from "dayjs/locale/uk"
+// import dayjs from "dayjs"
+// import uk from "dayjs/locale/uk"
 import { Avatar } from "primereact/avatar"
 import { Rating } from "primereact/rating"
 import { Button } from "primereact/button"
 import { CiUser as UserIcon } from "react-icons/ci"
-import updateLocale from "dayjs/plugin/updateLocale"
+// import updateLocale from "dayjs/plugin/updateLocale"
 import { TabView, TabPanel } from "primereact/tabview"
 import "react-big-calendar/lib/css/react-big-calendar.css"
-import { Calendar, dayjsLocalizer, Event } from "react-big-calendar"
+import { /* Calendar, dayjsLocalizer, */ Event } from "react-big-calendar"
 import { MdOutlineAddBox as AddToFavouriteIcon } from "react-icons/md"
-
+import Calendar from "../../components/Calendar/Calendar"
 import styles from "./TutorPage.module.scss"
 import TutorReviews from "../../components/TutorPage/TutorReviews"
 import AddReviewsModal from "../../components/TutorPage/AddReviewsModal"
 
-dayjs.locale(uk)
+// dayjs.locale(uk)
 
-dayjs.extend(updateLocale)
+// dayjs.extend(updateLocale)
 
-dayjs.updateLocale("uk", {
-  weekdaysShort: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-})
+// dayjs.updateLocale("uk", {
+//   weekdaysShort: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+// })
 
-const localizer = dayjsLocalizer(dayjs)
+// const localizer = dayjsLocalizer(dayjs)
 
 const TutorPage = () => {
   // const s = new Date(2024, 2, 16, 12, 0)
@@ -88,7 +88,8 @@ const TutorPage = () => {
           <div className={styles["left-col-bottom"]}>
             <TabView>
               <TabPanel header="Розклад">
-                <div>
+                <Calendar />
+                {/* <div>
                   <Calendar
                     localizer={localizer}
                     events={events}
@@ -105,7 +106,7 @@ const TutorPage = () => {
                       week: "Тиждень",
                     }}
                   />
-                </div>
+                </div> */}
               </TabPanel>
 
               <TabPanel header="Відгуки (36)">

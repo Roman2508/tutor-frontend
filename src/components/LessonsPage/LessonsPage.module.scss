@@ -1,0 +1,108 @@
+.filter {
+  width: 33.3333333%;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.filter-title {
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.filter-item {
+  margin-bottom: 20px;
+}
+
+.input-full-width {
+  width: 100%;
+}
+
+.price-range {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.radio-group {
+  gap: 15px;
+  display: flex;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.radio-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.radio-label {
+  cursor: pointer;
+}
+
+/* Lessons Card */
+
+.wrapper {
+  display: flex;
+}
+
+.col + .col {
+  margin-left: 20px;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.user-name {
+  color: black;
+  font-size: 24px;
+  margin: 0;
+}
+
+.lesson-name {
+  margin: 0;
+  font-size: 18px;
+  color: black;
+}
+
+.lesson-theme {
+  margin: 0;
+}
+
+.status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status {
+  margin: 0;
+}
+
+.badge {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background-color: var(--primary-400); // Заплановано
+  //   background-color: var(--green-500); // Проведено
+}
+
+.date {
+  text-align: right;
+  margin: 0;
+}
