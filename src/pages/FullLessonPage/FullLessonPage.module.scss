@@ -62,7 +62,6 @@
 
 .file {
   width: 20%;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,6 +79,30 @@
   p {
     margin: 10px 0 0;
     font-weight: 600;
+  }
+}
+
+.file-controls {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.file-controls-icon {
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  + .file-controls-icon {
+    margin-left: 10px;
   }
 }
 
