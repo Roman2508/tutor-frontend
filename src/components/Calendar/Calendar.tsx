@@ -23,6 +23,8 @@ const Calendar: React.FC<ICalendarProps> = ({ events = [] }) => {
   return (
     <div>
       <CalendarComponent
+        onSelectEvent={(e) => console.log(e)}
+        onDoubleClickEvent={(e) => console.log(e)}
         localizer={localizer}
         events={events}
         defaultView="week"

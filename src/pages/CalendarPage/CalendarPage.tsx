@@ -7,12 +7,25 @@ import { Card } from "primereact/card"
 import Avatar from "../../components/ui/Avatar/Avatar"
 import { Button } from "primereact/button"
 import { Link } from "react-router-dom"
+import dayjs from "dayjs"
 
 const CalendarPage = () => {
+  const start = dayjs().add(15, "hour").toDate()
+  const end = dayjs().add(17, "hour").toDate()
+
   return (
     <div className={styles.container}>
       <Card className={styles["calendar-wrapper"]}>
-        <Calendar />
+        <Calendar
+          events={[
+            {
+              start: start,
+              end: end,
+              title: "111",
+              resource: "maybe event id",
+            },
+          ]}
+        />
       </Card>
 
       <Card className={styles["lesson-info"]}>
