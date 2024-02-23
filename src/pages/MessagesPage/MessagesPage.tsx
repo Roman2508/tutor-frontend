@@ -1,4 +1,5 @@
 import React from "react"
+import cn from "classnames"
 import { Card } from "primereact/card"
 import { Menu } from "primereact/menu"
 import { Button } from "primereact/button"
@@ -30,7 +31,7 @@ const MessagesPage = () => {
           </div>
         </Card>
 
-        <Card className={styles.chat}>
+        <Card className={cn(styles.chat)} style={{ padding: "0 !important" }}>
           <div className={styles["chat-top"]}>
             <div className={styles["chat-top-data"]}>
               <Avatar shape="circle" />

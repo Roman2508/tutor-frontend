@@ -12,11 +12,23 @@
   width: 100%;
   max-width: 33.33333%;
   margin-right: 20px;
+
+  [data-pc-section="content"] {
+    padding: 0;
+  }
 }
 
 .chat {
   width: 100%;
   max-width: 66.66666%;
+  padding: 0 !important;
+
+  [data-pc-section="body"] {
+    // padding: 1.25rem 1.25rem 0 1.25rem;
+  }
+  [data-pc-section="content"] {
+    padding: 0;
+  }
 }
 
 .chat-top {

@@ -1,13 +1,13 @@
 import React from "react"
+import dayjs from "dayjs"
 import cn from "classnames"
+import { Card } from "primereact/card"
+import { Link } from "react-router-dom"
+import { Button } from "primereact/button"
 
 import styles from "./CalendarPage.module.scss"
-import Calendar from "../../components/Calendar/Calendar"
-import { Card } from "primereact/card"
 import Avatar from "../../components/ui/Avatar/Avatar"
-import { Button } from "primereact/button"
-import { Link } from "react-router-dom"
-import dayjs from "dayjs"
+import Calendar from "../../components/Calendar/Calendar"
 
 const CalendarPage = () => {
   const start = dayjs().add(15, "hour").toDate()

@@ -2,14 +2,17 @@
 }
 
 .messages {
+  padding: 0 10px;
   //   max-height: 43vh;
   height: 100%;
-  max-height: calc(100vh - 400px);
+  max-height: calc(100vh - 360px);
+  min-height: calc(100vh - 440px);
   overflow-y: auto;
 }
 
 .message-wrapper {
   display: flex;
+  position: relative;
 
   &.own-comment {
     justify-content: end;
@@ -21,10 +24,16 @@
   padding: 10px;
   max-width: 70%;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 
   &.own-comment {
     text-align: end;
     background-color: var(--cyan-50);
   }
+}
+
+.send-at {
+  position: absolute;
+  bottom: 5px;
+  font-size: 12px;
 }
