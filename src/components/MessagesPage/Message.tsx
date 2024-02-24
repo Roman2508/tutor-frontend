@@ -68,7 +68,7 @@ const Message = () => {
         {
           /* Array(10)
           .fill(null) */
-          messages.map((message, index) => (
+          messages?.map((message, index) => (
             <div
               className={cn(styles["message-wrapper"], {
                 [styles["own-comment"]]:
