@@ -1,15 +1,17 @@
+import { LessonType } from "../redux/lessons/lessonsType"
+
 /* auth */
 export type AuthLoginType = {
   email: string
   password: string
-  userRole: 'tutor' | 'student'
+  userRole: "tutor" | "student"
 }
 
 export type AuthRegisterType = {
   email: string
   password: string
   name: string
-  userRole: 'tutor' | 'student'
+  userRole: "tutor" | "student"
 }
 
 export type AuthMeType = {
@@ -22,7 +24,7 @@ export type LessonsFilterType = {
   name: string
   tutorName: string
   price: [number, number]
-  sortBy: 'price-desc' | 'price-asc' | 'reviews-desc' | 'rating-desc'
+  sortBy: "price-desc" | "price-asc" | "reviews-desc" | "rating-desc"
   currentPage: number
   pageSize: number
 }
@@ -33,10 +35,17 @@ export type CreateOrUpdateLessonType = {
   tutor: number
   duration: number
 }
+
+export type GetLessonsResponce = {
+  entities: LessonType[]
+  page: number
+  size: number
+  totalCount: number
+}
 /* // lessons */
 
 /* dialogs */
-export type GetDialogsType = { id: number; userRole: 'tutor' | 'student' }
+export type GetDialogsType = { id: number; userRole: "tutor" | "student" }
 export type DeleteDialogType = GetDialogsType
 export type CreateDialogType = { tutor: number; student: number }
 /* // dialogs */
@@ -55,7 +64,7 @@ export type ReservedLessonsFilterType = {
   name: string
   student: number
   tutor: number
-  sortBy: 'price-desc' | 'price-asc' | 'reviews-desc' | 'rating-desc'
+  sortBy: "price-desc" | "price-asc" | "reviews-desc" | "rating-desc"
   currentPage: number
   pageSize: number
 }
@@ -64,7 +73,7 @@ export type CreateReservedLessonsType = {
   name: string
   theme: string
   price: number
-  status: 'planned'
+  status: "planned"
   duration: number
   startAt: Date
   tutor: number

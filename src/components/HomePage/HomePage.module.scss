@@ -58,21 +58,29 @@
 
 .tutor-info {
   margin-right: 20px;
+  flex-grow: 1;
 }
 
 .tutor-info-top {
   display: flex;
-  align-items: center;
   gap: 10px;
 }
 
-.tutor-name {
+.lesson-name {
   color: black;
   font-size: 24px;
   margin: 0;
 }
 
+.tutor-name {
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 20px;
+  margin: 0;
+}
+
 .add-to-favourite {
+  margin-top: 8px;
   cursor: pointer;
 
   &:active {
@@ -90,6 +98,7 @@
 
 .tutor-actions {
   text-align: center;
+  max-width: 140px;
 }
 
 .tutor-action-button {

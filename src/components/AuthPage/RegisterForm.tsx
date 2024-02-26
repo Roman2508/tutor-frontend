@@ -1,32 +1,34 @@
 import React from "react"
 import cn from "classnames"
 import { Card } from "primereact/card"
+import { useSelector } from "react-redux"
 import { Button } from "primereact/button"
+import { Message } from "primereact/message"
+import { Dropdown } from "primereact/dropdown"
+import { useNavigate } from "react-router-dom"
 import { Password } from "primereact/password"
 import { InputText } from "primereact/inputtext"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
-import styles from "../../pages/AuthPage/AuthPage.module.scss"
-import { Message } from "primereact/message"
+
 import { useAppDispatch } from "../../redux/store"
-import { authLogin } from "../../redux/auth/authAsyncActions"
-import { Dropdown } from "primereact/dropdown"
-import { emailPattern } from "./emailPattern"
 import { authSelector } from "../../redux/auth/authSlice"
-import { useSelector } from "react-redux"
 import { LoadingStatusTypes } from "../../redux/appTypes"
-import { useNavigate } from "react-router-dom"
+import styles from "../../pages/AuthPage/AuthPage.module.scss"
+import { authRegister } from "../../redux/auth/authAsyncActions"
+import { emailPattern } from "./emailPattern"
 
 interface IAuthFilds {
+  name: string
   email: string
   password: string
   userRole: "tutor" | "student"
 }
 
-interface ILoginFormProps {
+interface IRegisterFormProps {
   setAuthType: React.Dispatch<React.SetStateAction<"login" | "register">>
 }
 
-const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
+const RegisterForm: React.FC<IRegisterFormProps> = ({ setAuthType }) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -42,7 +44,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
 
   const onSubmit: SubmitHandler<IAuthFilds> = async (data) => {
     try {
-      const { payload } = await dispatch(authLogin(data))
+      const { payload } = await dispatch(authRegister(data))
 
       // @ts-ignore
       if (payload.user) {
@@ -52,12 +54,41 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
   }
 
   return (
-    <Card className={cn(styles.content)}>
-      <h4 style={{ margin: 0, fontSize: "24px" }}>Увійдіть в Tutor</h4>
+    <Card className={styles.content}>
+      <h4 style={{ margin: 0, fontSize: "24px" }}>Реєстрація в Tutor</h4>
 
-      <p>Увійдіть, щоб брати уроки або викладати онлайн</p>
+      <p>
+        Зареєструйтеся, щоб брати уроки або викладати онлайн та заробляти у зручний для вас час.
+      </p>
 
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name="name"
+          control={control}
+          rules={{ required: "Вкажіть своє ім'я" }}
+          render={({ field }) => {
+            return (
+              <div>
+                <InputText
+                  autoFocus
+                  {...field}
+                  placeholder="Ім'я"
+                  className={cn(styles.input, {
+                    "p-invalid": errors.email,
+                  })}
+                />
+                {errors.email && (
+                  <Message
+                    severity="error"
+                    style={{ width: "100%", marginBottom: "20px" }}
+                    text={errors.email?.message}
+                  />
+                )}
+              </div>
+            )
+          }}
+        />
+
         <Controller
           name="email"
           control={control}
@@ -65,12 +96,10 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
             required: "Вкажіть свою ел. пошту",
             pattern: { value: emailPattern, message: "Невірний формат пошти" },
           }}
-          render={({ field, fieldState }) => {
+          render={({ field }) => {
             return (
               <div>
                 <InputText
-                  // {...(register('email'), { required: true })}
-                  autoFocus
                   {...field}
                   placeholder="Ел. пошта"
                   className={cn(styles.input, {
@@ -96,7 +125,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
             required: "Вкажіть свій пароль",
             minLength: { message: "Довжина паролю має бути більше 6 символів", value: 6 },
           }}
-          render={({ field, fieldState }) => {
+          render={({ field }) => {
             return (
               <div>
                 <InputText
@@ -122,7 +151,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
           name="userRole"
           control={control}
           rules={{ required: "Вкажіть свою роль" }}
-          render={({ field, fieldState }) => {
+          render={({ field }) => {
             return (
               <div>
                 <Dropdown
@@ -160,13 +189,14 @@ const LoginForm: React.FC<ILoginFormProps> = ({ setAuthType }) => {
       </form>
 
       <p>
-        Немає облікового запису?
-        <span onClick={() => setAuthType("register")} className={styles.link}>
-          Зареєструйтесь
+        Уже є обліковий запис?
+        <br />
+        <span onClick={() => setAuthType("login")} className={styles.link}>
+          Увійдіть
         </span>
       </p>
     </Card>
   )
 }
 
-export default LoginForm
+export default RegisterForm

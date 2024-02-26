@@ -1,9 +1,9 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-import { RootState } from '../store'
-import { LoadingStatusTypes } from '../appTypes'
-import { InitialStateType, ReviewsType, TutorType } from './tutorsTypes'
-import { createReviews, deleteReviews, getTutor } from './tutorsAsyncActions'
+import { RootState } from "../store"
+import { LoadingStatusTypes } from "../appTypes"
+import { InitialStateType, ReviewsType, TutorType } from "./tutorsTypes"
+import { createReviews, deleteReviews, getTutor } from "./tutorsAsyncActions"
 
 const lessonsInitialState: InitialStateType = {
   tutor: null,
@@ -11,7 +11,7 @@ const lessonsInitialState: InitialStateType = {
 }
 
 const tutorSlice = createSlice({
-  name: 'lessons',
+  name: "lessons",
   initialState: lessonsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
@@ -47,4 +47,4 @@ export const { setLoadingStatus } = tutorSlice.actions
 
 export default tutorSlice.reducer
 
-export const lessonsSelector = (state: RootState) => state.lessons
+export const tutorsSelector = (state: RootState) => state.tutors

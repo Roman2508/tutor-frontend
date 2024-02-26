@@ -1,9 +1,9 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { ToastContainer, toast } from 'react-toastify'
+import React from "react"
+import { useSelector } from "react-redux"
+import { ToastContainer, toast } from "react-toastify"
 
-import { useAppDispatch } from '../../redux/store'
-import { clearAppAlert, selectAppStatus } from '../../redux/appStatus/appStatusSlice'
+import { useAppDispatch } from "../../redux/store"
+import { clearAppAlert, selectAppStatus } from "../../redux/appStatus/appStatusSlice"
 
 const AppAlert: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -13,14 +13,16 @@ const AppAlert: React.FC = () => {
   React.useEffect(() => {
     if (!message || !status) return
 
-    toast[status](message, { autoClose: 1500 })
+    const msg = typeof message === "string" ? message : message[0]
+
+    toast[status](msg, { autoClose: 2000 })
     dispatch(clearAppAlert())
   }, [message, status, dispatch])
-  
+
   return (
     <ToastContainer
       position="top-right"
-      autoClose={1500}
+      autoClose={2000}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick

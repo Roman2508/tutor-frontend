@@ -1,9 +1,10 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-import { RootState } from '../store'
-import { LoadingStatusTypes } from '../appTypes'
-import { InitialStateType, LessonType } from './lessonsType'
-import { getLessons, createLesson, updateLesson, deleteLesson } from './lessonsAsyncActions'
+import { RootState } from "../store"
+import { LoadingStatusTypes } from "../appTypes"
+import { InitialStateType, LessonType } from "./lessonsType"
+import { getLessons, createLesson, updateLesson, deleteLesson } from "./lessonsAsyncActions"
+import { GetLessonsResponce } from "../../api/apiTypes"
 
 const lessonsInitialState: InitialStateType = {
   lessons: null,
@@ -11,7 +12,7 @@ const lessonsInitialState: InitialStateType = {
 }
 
 const lessonsSlice = createSlice({
-  name: 'lessons',
+  name: "lessons",
   initialState: lessonsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
@@ -20,8 +21,8 @@ const lessonsSlice = createSlice({
   },
   extraReducers: (builder) => {
     /* getLessons */
-    builder.addCase(getLessons.fulfilled, (state, action: PayloadAction<LessonType[]>) => {
-      state.lessons = action.payload
+    builder.addCase(getLessons.fulfilled, (state, action: PayloadAction<GetLessonsResponce>) => {
+      state.lessons = action.payload.entities
       state.loadingStatus = LoadingStatusTypes.SUCCESS
     })
 
