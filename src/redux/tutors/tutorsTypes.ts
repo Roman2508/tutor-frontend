@@ -29,11 +29,12 @@ export type ReviewsType = {
   sender: {
     id: number
     name: string
+    avatarUrl: string
   }
-  recipient: {
-    id: number
-    name: string
-  }
+  // recipient: {
+  //   id: number
+  //   name: string
+  // }
   message: string
   rating: number
   createdAt: Date

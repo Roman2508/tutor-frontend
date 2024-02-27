@@ -80,5 +80,65 @@
   text-align: center;
 }
 
-.left-col-bottom {
+.lessons-wrapper {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.lessons-details {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.lesson-col-left {
+  h4 {
+    margin: 0;
+  }
+  h5 {
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.lesson-col-center {
+  text-align: right;
+  flex-grow: 1;
+
+  h4 {
+    font-size: 20px;
+    margin: 0;
+    line-height: 1;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+.lesson-col-right {
+  margin-left: 20px;
+}
+
+.create-lesson-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 300px;
+
+  h6 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+  }
+
+  .input {
+    margin-bottom: 20px;
+  }
+
+  .button {
+    width: 300px;
+  }
 }

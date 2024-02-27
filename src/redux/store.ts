@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux"
-import { configureStore } from "@reduxjs/toolkit"
-import lessonsSlice from "./lessons/lessonsSlice"
-import appStatusSlice from "./appStatus/appStatusSlice"
-import dialogsSlice from "./dialogs/dialogsSlice"
-import reservedLessonsSlice from "./reservedLessons/reservedLessonsSlice"
-import tutorsSlice from "./tutors/tutorsSlice"
+import { useDispatch } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit'
+import lessonsSlice from './lessons/lessonsSlice'
+import appStatusSlice from './appStatus/appStatusSlice'
+import dialogsSlice from './dialogs/dialogsSlice'
+import reservedLessonsSlice from './reservedLessons/reservedLessonsSlice'
+import tutorsSlice from './tutors/tutorsSlice'
+import authSlice from './auth/authSlice'
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     dialogs: dialogsSlice,
     reservedLessons: reservedLessonsSlice,
     tutors: tutorsSlice,
+    auth: authSlice,
   },
 })
 

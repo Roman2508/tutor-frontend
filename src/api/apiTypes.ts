@@ -1,39 +1,64 @@
-import { LessonType } from "../redux/lessons/lessonsType"
+import { AuthType } from '../redux/auth/authTypes'
+import { LessonType } from '../redux/lessons/lessonsType'
 
 /* auth */
 export type AuthLoginType = {
   email: string
   password: string
-  userRole: "tutor" | "student"
+  userRole: 'tutor' | 'student'
 }
 
 export type AuthRegisterType = {
   email: string
   password: string
   name: string
-  userRole: "tutor" | "student"
+  userRole: 'tutor' | 'student'
 }
 
 export type AuthMeType = {
   token: string
 }
+
+export type AuthResponceType = {
+  user: AuthType
+  accessToken: string
+}
 /* // auth */
+
+/* users */
+export type UpdateTutorType = {
+  id: number
+  name?: string
+  email?: string
+  password?: string
+}
+export type UpdateStudentType = UpdateTutorType & { description?: string }
+/* // users */
 
 /* lessons */
 export type LessonsFilterType = {
   name: string
   tutorName: string
   price: [number, number]
-  sortBy: "price-desc" | "price-asc" | "reviews-desc" | "rating-desc"
+  sortBy: 'price-desc' | 'price-asc' | 'reviews-desc' | 'rating-desc'
   currentPage: number
   pageSize: number
 }
 
-export type CreateOrUpdateLessonType = {
+export type CreateLessonType = {
   name: string
   price: number
   tutor: number
   duration: number
+  theme?: string
+}
+
+export type UpdateLessonType = {
+  id: number
+  name: string
+  price: number
+  duration: number
+  theme?: string
 }
 
 export type GetLessonsResponce = {
@@ -45,7 +70,7 @@ export type GetLessonsResponce = {
 /* // lessons */
 
 /* dialogs */
-export type GetDialogsType = { id: number; userRole: "tutor" | "student" }
+export type GetDialogsType = { id: number; userRole: 'tutor' | 'student' }
 export type DeleteDialogType = GetDialogsType
 export type CreateDialogType = { tutor: number; student: number }
 /* // dialogs */
@@ -64,7 +89,7 @@ export type ReservedLessonsFilterType = {
   name: string
   student: number
   tutor: number
-  sortBy: "price-desc" | "price-asc" | "reviews-desc" | "rating-desc"
+  sortBy: 'price-desc' | 'price-asc' | 'reviews-desc' | 'rating-desc'
   currentPage: number
   pageSize: number
 }
@@ -73,7 +98,7 @@ export type CreateReservedLessonsType = {
   name: string
   theme: string
   price: number
-  status: "planned"
+  status: 'planned'
   duration: number
   startAt: Date
   tutor: number

@@ -1,10 +1,10 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { RootState } from "../store"
-import { LoadingStatusTypes } from "../appTypes"
-import { InitialStateType, LessonType } from "./lessonsType"
-import { getLessons, createLesson, updateLesson, deleteLesson } from "./lessonsAsyncActions"
-import { GetLessonsResponce } from "../../api/apiTypes"
+import { RootState } from '../store'
+import { LoadingStatusTypes } from '../appTypes'
+import { InitialStateType, LessonType } from './lessonsType'
+import { getLessons, createLesson, updateLesson, deleteLesson } from './lessonsAsyncActions'
+import { GetLessonsResponce } from '../../api/apiTypes'
 
 const lessonsInitialState: InitialStateType = {
   lessons: null,
@@ -12,7 +12,7 @@ const lessonsInitialState: InitialStateType = {
 }
 
 const lessonsSlice = createSlice({
-  name: "lessons",
+  name: 'lessons',
   initialState: lessonsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
@@ -27,24 +27,24 @@ const lessonsSlice = createSlice({
     })
 
     /* createLesson */
-    builder.addCase(createLesson.fulfilled, (state, action: PayloadAction<LessonType>) => {
-      if (!state.lessons) return
-      state.lessons.push(action.payload)
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    // builder.addCase(createLesson.fulfilled, (state, action: PayloadAction<LessonType>) => {
+    //   if (!state.lessons) return
+    //   state.lessons.push(action.payload)
+    //   state.loadingStatus = LoadingStatusTypes.SUCCESS
+    // })
 
     /* updateLesson */
-    builder.addCase(updateLesson.fulfilled, (state, action: PayloadAction<LessonType>) => {
-      if (!state.lessons) return
-      const lessons = state.lessons.map((el) => {
-        if (el.id === action.payload.id) {
-          return { ...el, ...action.payload }
-        }
-        return el
-      })
-      state.lessons = lessons
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    // builder.addCase(updateLesson.fulfilled, (state, action: PayloadAction<LessonType>) => {
+    //   if (!state.lessons) return
+    //   const lessons = state.lessons.map((el) => {
+    //     if (el.id === action.payload.id) {
+    //       return { ...el, ...action.payload }
+    //     }
+    //     return el
+    //   })
+    //   state.lessons = lessons
+    //   state.loadingStatus = LoadingStatusTypes.SUCCESS
+    // })
 
     /* deleteLesson */
     builder.addCase(deleteLesson.fulfilled, (state, action: PayloadAction<number>) => {

@@ -1,29 +1,25 @@
-import React from "react"
-import cn from "classnames"
-import { Ripple } from "primereact/ripple"
-import { Slider } from "primereact/slider"
-import { Button } from "primereact/button"
-import { Dropdown } from "primereact/dropdown"
-import { InputText } from "primereact/inputtext"
-import { Paginator } from "primereact/paginator"
-import {
-  AutoComplete,
-  AutoCompleteChangeEvent,
-  AutoCompleteCompleteEvent,
-} from "primereact/autocomplete"
-import { CiSearch as SearchIcon } from "react-icons/ci"
+import React from 'react'
+import cn from 'classnames'
+import { Slider } from 'primereact/slider'
+import { Button } from 'primereact/button'
+import { Dropdown } from 'primereact/dropdown'
+import { InputText } from 'primereact/inputtext'
+import { Paginator } from 'primereact/paginator'
+import { AutoComplete, AutoCompleteChangeEvent, AutoCompleteCompleteEvent } from 'primereact/autocomplete'
+import { CiSearch as SearchIcon } from 'react-icons/ci'
 
-import styles from "./HomePage.module.scss"
-import { lessonsList } from "./lessonsList"
-import { LessonsFilterType } from "../../api/apiTypes"
-import { useAppDispatch } from "../../redux/store"
-import { getLessons } from "../../redux/lessons/lessonsAsyncActions"
+import styles from './HomePage.module.scss'
+import { useAppDispatch } from '../../redux/store'
+import { LessonsFilterType } from '../../api/apiTypes'
+import { getLessons } from '../../redux/lessons/lessonsAsyncActions'
+import AutoCompleteLessons from '../ui/AutoCompleteLessons/AutoCompleteLessons'
+import { lessonsList } from '../ui/AutoCompleteLessons/lessonsList'
 
 const sortTypes = [
-  { name: "За зменшенням ціни", value: "price-desc" },
-  { name: "За зростанням ціни", value: "price-asc" },
-  { name: "За кількістю відгуків", value: "reviews-desc" },
-  { name: "За найвищим рейтингом", value: "rating-desc" },
+  { name: 'За зменшенням ціни', value: 'price-desc' },
+  { name: 'За зростанням ціни', value: 'price-asc' },
+  { name: 'За кількістю відгуків', value: 'reviews-desc' },
+  { name: 'За найвищим рейтингом', value: 'rating-desc' },
 ]
 
 interface ITutorFilterProps {
@@ -38,8 +34,6 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
   const [currentPage, setCurrentPage] = React.useState(1)
   const [first, setFirst] = React.useState([0, 0, 0])
   const [rows, setRows] = React.useState([10, 10, 10])
-
-  const [activeSortType, setActiveSortType] = React.useState(sortTypes[0])
 
   const [filteredItems, setFilteredItems] = React.useState<{ value: string; label: string }[]>([])
 
@@ -72,29 +66,35 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
 
   return (
     <div className={styles.filter}>
-      <h2 className={styles["filter-title"]}>Знайдіть найкращого онлайн-репетитора</h2>
+      <h2 className={styles['filter-title']}>Знайдіть найкращого онлайн-репетитора</h2>
 
-      <div className={styles["filter-item"]}>
+      <div className={styles['filter-item']}>
         <b>Я хочу вивчати:</b>
 
-        <AutoComplete
+        {/* <AutoComplete
           dropdown
           name="name"
           field="label"
           value={filter.name}
           completeMethod={search}
           suggestions={filteredItems}
+          className={styles['input-full-width']}
           virtualScrollerOptions={{ itemSize: 38 }}
-          className={styles["input-full-width"]}
-          onChange={(e: AutoCompleteChangeEvent) =>
-            setFilter((prev) => ({ ...prev, [e.target.name]: e.target.value.label }))
-          }
+          onSelect={(e) => setFilter((prev) => ({ ...prev, name: e.value.label }))}
+          onChange={(e: AutoCompleteChangeEvent) => setFilter((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
+        /> */}
+
+        <AutoCompleteLessons
+          name="name"
+          value={filter.name}
+          onSelect={(e) => setFilter((prev) => ({ ...prev, name: e.value.label }))}
+          onChange={(e: AutoCompleteChangeEvent) => setFilter((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
         />
       </div>
 
-      <div className={styles["filter-item"]}>
+      <div className={styles['filter-item']}>
         <b>Ціна за урок:</b>
-        <div className={styles["price-range"]}>
+        <div className={styles['price-range']}>
           <span>{filter.price[0]}</span>
           <span>{filter.price[1]}</span>
         </div>
@@ -106,7 +106,7 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
         />
       </div>
 
-      <div className={styles["filter-item"]}>
+      <div className={styles['filter-item']}>
         <b>Сортувати за:</b>
         <br />
         <Dropdown
@@ -114,20 +114,20 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
           onChange={(e) => setFilter((prev) => ({ ...prev, sortBy: e.value }))}
           options={sortTypes}
           optionLabel="name"
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           placeholder="Сортувати за"
         />
       </div>
 
-      <div className={styles["filter-item"]}>
+      <div className={styles['filter-item']}>
         <b>Пошук репетитора:</b>
         <br />
 
-        <div className={styles["search-wrapper"]}>
-          <SearchIcon size={24} className={styles["search-icon"]} />
+        <div className={styles['search-wrapper']}>
+          <SearchIcon size={24} className={styles['search-icon']} />
           <InputText
             placeholder="Пошук"
-            className={styles["input-full-width"]}
+            className={styles['input-full-width']}
             value={filter.tutorName}
             onChange={(e) => setFilter((prev) => ({ ...prev, tutorName: e.target.value }))}
           />
@@ -135,19 +135,16 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
       </div>
 
       <Paginator
-        // template={template1}
         first={first[0]}
         rows={rows[0]}
         totalRecords={120}
+        style={{ marginBottom: '20px' }}
         onPageChange={(e) => onPageChange(e, 0)}
         template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        // leftContent={leftContent}
-        // rightContent={rightContent}
-        style={{ marginBottom: "20px" }}
       />
 
-      <Button style={{ width: "100%" }} label="Знайти" onClick={findLessons} />
-      <Button style={{ width: "100%", marginTop: "20px" }} label="Очистити фільтр" outlined />
+      <Button style={{ width: '100%' }} label="Знайти" onClick={findLessons} />
+      <Button style={{ width: '100%', marginTop: '20px' }} label="Очистити фільтр" outlined />
     </div>
   )
 }

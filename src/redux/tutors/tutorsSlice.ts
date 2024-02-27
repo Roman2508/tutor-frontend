@@ -1,9 +1,11 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { RootState } from "../store"
-import { LoadingStatusTypes } from "../appTypes"
-import { InitialStateType, ReviewsType, TutorType } from "./tutorsTypes"
-import { createReviews, deleteReviews, getTutor } from "./tutorsAsyncActions"
+import { RootState } from '../store'
+import { LoadingStatusTypes } from '../appTypes'
+import { InitialStateType, ReviewsType, TutorType } from './tutorsTypes'
+import { createReviews, deleteReviews, getTutor } from './tutorsAsyncActions'
+import { createLesson, updateLesson } from '../lessons/lessonsAsyncActions'
+import { LessonType } from '../lessons/lessonsType'
 
 const lessonsInitialState: InitialStateType = {
   tutor: null,
@@ -11,7 +13,7 @@ const lessonsInitialState: InitialStateType = {
 }
 
 const tutorSlice = createSlice({
-  name: "lessons",
+  name: 'lessons',
   initialState: lessonsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
@@ -22,6 +24,26 @@ const tutorSlice = createSlice({
     /* getTutor */
     builder.addCase(getTutor.fulfilled, (state, action: PayloadAction<TutorType>) => {
       state.tutor = action.payload
+      state.loadingStatus = LoadingStatusTypes.SUCCESS
+    })
+
+    /* createLesson */
+    builder.addCase(createLesson.fulfilled, (state, action: PayloadAction<LessonType>) => {
+      if (!state.tutor) return
+      state.tutor.lessons.push(action.payload)
+      state.loadingStatus = LoadingStatusTypes.SUCCESS
+    })
+
+    /* updateLesson */
+    builder.addCase(updateLesson.fulfilled, (state, action: PayloadAction<LessonType>) => {
+      if (!state.tutor) return
+      const lessons = state.tutor.lessons.map((el) => {
+        if (el.id === action.payload.id) {
+          return { ...el, ...action.payload }
+        }
+        return el
+      })
+      state.tutor.lessons = lessons
       state.loadingStatus = LoadingStatusTypes.SUCCESS
     })
 

@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig } from "axios"
+import axios, { InternalAxiosRequestConfig } from 'axios'
 
 import {
   AuthMeType,
@@ -12,23 +12,27 @@ import {
   ReservedLessonsFilterType,
   UpdateReservedLessonsType,
   CreateReservedLessonsType,
-  CreateOrUpdateLessonType,
+  CreateLessonType,
+  UpdateLessonType,
   GetLessonsResponce,
-} from "./apiTypes"
-import { AuthType } from "../redux/auth/authTypes"
-import { LessonType } from "../redux/lessons/lessonsType"
-import { DialogType } from "../redux/dialogs/dialogsTypes"
-import { ReviewsType, TutorType } from "../redux/tutors/tutorsTypes"
-import { ReservedLessonType } from "../redux/reservedLessons/reservedLessonsTypes"
+  UpdateTutorType,
+  UpdateStudentType,
+  AuthResponceType,
+} from './apiTypes'
+import { AuthType } from '../redux/auth/authTypes'
+import { LessonType } from '../redux/lessons/lessonsType'
+import { DialogType } from '../redux/dialogs/dialogsTypes'
+import { ReviewsType, TutorType } from '../redux/tutors/tutorsTypes'
+import { ReservedLessonType } from '../redux/reservedLessons/reservedLessonsTypes'
 
 const instanse = axios.create({
-  baseURL: "http://localhost:7777/",
+  baseURL: 'http://localhost:7777/',
 })
 
 // Якщо є токен, вшиваю його в конфігурацію axios
 // @ts-ignore
 instanse.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = window.localStorage.getItem("tutor-token")
+  const token = window.localStorage.getItem('tutor-token')
 
   if (config.headers && token) {
     config.headers.Authorization = String(`Bearer ${token}`)
@@ -40,25 +44,35 @@ instanse.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 export const authAPI = {
   login(payload: AuthLoginType) {
-    return instanse.post<AuthType>("/auth/login", payload)
+    return instanse.post<AuthResponceType>('/auth/login', payload)
   },
   register(payload: AuthRegisterType) {
-    return instanse.post<AuthType>("/auth/register", payload)
+    return instanse.post<AuthResponceType>('/auth/register', payload)
   },
   getMe(payload: AuthMeType) {
-    return instanse.post<AuthType>("/auth/me", payload)
+    return instanse.post<AuthType>('/auth/me', payload)
+  },
+
+  updateTutor(payload: UpdateTutorType) {
+    const { id, ...data } = payload
+    return instanse.patch(`/tutors/${id}`, data)
+  },
+  updateStudent(payload: UpdateStudentType) {
+    const { id, ...data } = payload
+    return instanse.patch(`/student/${id}`, data)
   },
 }
 
 export const lessonsAPI = {
   getAll(payload: LessonsFilterType) {
-    return instanse.post<GetLessonsResponce>("/lessons/get", payload)
+    return instanse.post<GetLessonsResponce>('/lessons/get', payload)
   },
-  create(payload: CreateOrUpdateLessonType) {
-    return instanse.post<LessonType>("/lessons", payload)
+  create(payload: CreateLessonType) {
+    return instanse.post<LessonType>('/lessons', payload)
   },
-  update(payload: CreateOrUpdateLessonType) {
-    return instanse.patch<LessonType>("/lessons", payload)
+  update(payload: UpdateLessonType) {
+    const { id, ...rest } = payload
+    return instanse.patch<LessonType>(`/lessons/${id}`, rest)
   },
   delete(id: number) {
     return instanse.delete<number>(`/lessons/${id}`)
@@ -90,7 +104,7 @@ export const messagesAPI = {
     return instanse.get(`/messages/${id}`)
   },
   create(payload: CreateMessageType) {
-    return instanse.post("/messages", payload)
+    return instanse.post('/messages', payload)
   },
   updateIsReading(id: number) {
     return instanse.patch(`/messages/${id}`)
@@ -102,7 +116,7 @@ export const messagesAPI = {
 
 export const reviewsAPI = {
   create(payload: CreateReviewsType) {
-    return instanse.patch<ReviewsType>("/reviews", payload)
+    return instanse.patch<ReviewsType>('/reviews', payload)
   },
   remove(id: number) {
     return instanse.delete<number>(`/reviews/${id}`)
@@ -111,13 +125,13 @@ export const reviewsAPI = {
 
 export const reservedLessonsAPI = {
   getAll(payload: ReservedLessonsFilterType) {
-    return instanse.post<ReservedLessonType[]>("/reserved-lessons/get", payload)
+    return instanse.post<ReservedLessonType[]>('/reserved-lessons/get', payload)
   },
   getOneById(id: number) {
     return instanse.get<ReservedLessonType>(`/reserved-lessons/${id}`)
   },
   create(payload: CreateReservedLessonsType) {
-    return instanse.post<ReservedLessonType>("/reserved-lessons", payload)
+    return instanse.post<ReservedLessonType>('/reserved-lessons', payload)
   },
   update(payload: UpdateReservedLessonsType) {
     const { id, ...data } = payload

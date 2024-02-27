@@ -6,14 +6,11 @@ export type InitialStateType = {
 }
 
 export type AuthType = {
-  user: {
-    id: number
-    name: string
-    userRole: 'totur' | 'student'
-    email: string
-    avatarUrl: string
-    description?: string
-    createdAt: Date
-  }
-  accessToken: string
+  id: number
+  name: string
+  userRole: 'tutor' | 'student'
+  email: string
+  avatarUrl: string
+  description?: string
+  createdAt: Date
 }
