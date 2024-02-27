@@ -98,8 +98,14 @@
   width: 10px;
   height: 10px;
   border-radius: 3px;
-  background-color: var(--primary-400); // Заплановано
-  //   background-color: var(--green-500); // Проведено
+
+  &.planned {
+    background-color: var(--primary-400); // Заплановано
+  }
+
+  &.conducted {
+    background-color: var(--green-500); // Проведено
+  }
 }
 
 .date {

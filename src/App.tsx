@@ -11,11 +11,11 @@ import TutorPage from "./pages/TutorPage/TutorPage"
 import { store, useAppDispatch } from "./redux/store"
 import AppAlert from "./components/AppAlert/AppAlert"
 import { authMe } from "./redux/auth/authAsyncActions"
-import LessonsPage from "./pages/LessonsPage/LessonsPage"
 import CalendarPage from "./pages/CalendarPage/CalendarPage"
-import SettingsPage from "./pages/SettingsPage/SettingsPage"
 import MessagesPage from "./pages/MessagesPage/MessagesPage"
 import FullLessonPage from "./pages/FullLessonPage/FullLessonPage"
+import SettingsPage from "./pages/SettingsPage/SettingsPage"
+import ReservedLessonsPage from "./pages/ReservedLessonsPage/ReservedLessonsPage"
 
 const value = {
   ripple: true,
@@ -45,7 +45,7 @@ const App = () => {
             <Route path="/tutor/me/:id" element={<TutorPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/messages" element={<MessagesPage />} />
-            <Route path="/lessons" element={<LessonsPage />} />
+            <Route path="/lessons" element={<ReservedLessonsPage />} />
             <Route path="/lesson/:id" element={<FullLessonPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/auth" element={<AuthPage />} />

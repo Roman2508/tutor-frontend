@@ -1,8 +1,8 @@
 import React from "react"
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
-import { AutoComplete } from "primereact/autocomplete"
 import { RadioButton } from "primereact/radiobutton"
+import { AutoComplete } from "primereact/autocomplete"
 
 import styles from "./LessonsPage.module.scss"
 import { Paginator } from "primereact/paginator"
@@ -14,7 +14,12 @@ const sortTypes = [
   { name: "За найвищим рейтингом", value: "rating-desc" },
 ]
 
-const LessonsFilter = () => {
+interface ILessonsFilterProps {
+  filter: any
+  setFilter: React.Dispatch<React.SetStateAction<any>>
+}
+
+const LessonsFilter: React.FC<ILessonsFilterProps> = ({ filter, setFilter }) => {
   const [userRole, setUserRole] = React.useState<"tutor" | "student">("tutor")
 
   const [lessonType, setLessonType] = React.useState<"all" | "planned" | "conducted">("all")
@@ -28,6 +33,8 @@ const LessonsFilter = () => {
     setFirst(first.map((f, i) => (index === i ? e.first : f)))
     setRows(rows.map((r, i) => (index === i ? e.rows : r)))
   }
+
+  console.log(filter)
 
   return (
     <div className={styles.filter}>

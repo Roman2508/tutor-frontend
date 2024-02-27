@@ -1,100 +1,81 @@
-import React from 'react'
-import cn from 'classnames'
-import { Slider } from 'primereact/slider'
-import { Button } from 'primereact/button'
-import { Dropdown } from 'primereact/dropdown'
-import { InputText } from 'primereact/inputtext'
-import { Paginator } from 'primereact/paginator'
-import { AutoComplete, AutoCompleteChangeEvent, AutoCompleteCompleteEvent } from 'primereact/autocomplete'
-import { CiSearch as SearchIcon } from 'react-icons/ci'
+import React from "react"
+import { Slider } from "primereact/slider"
+import { Button } from "primereact/button"
+import { Dropdown } from "primereact/dropdown"
+import { InputText } from "primereact/inputtext"
+import { CiSearch as SearchIcon } from "react-icons/ci"
+import { AutoCompleteChangeEvent } from "primereact/autocomplete"
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 
-import styles from './HomePage.module.scss'
-import { useAppDispatch } from '../../redux/store'
-import { LessonsFilterType } from '../../api/apiTypes'
-import { getLessons } from '../../redux/lessons/lessonsAsyncActions'
-import AutoCompleteLessons from '../ui/AutoCompleteLessons/AutoCompleteLessons'
-import { lessonsList } from '../ui/AutoCompleteLessons/lessonsList'
+import styles from "./HomePage.module.scss"
+import { useAppDispatch } from "../../redux/store"
+import { LessonsFilterType } from "../../api/apiTypes"
+import { LessonType } from "../../redux/lessons/lessonsType"
+import { filterInitialState } from "../../pages/HomePage/HomePage"
+import { lessonsList } from "../ui/AutoCompleteLessons/lessonsList"
+import { getLessons } from "../../redux/lessons/lessonsAsyncActions"
+import AutoCompleteLessons from "../ui/AutoCompleteLessons/AutoCompleteLessons"
 
 const sortTypes = [
-  { name: 'За зменшенням ціни', value: 'price-desc' },
-  { name: 'За зростанням ціни', value: 'price-asc' },
-  { name: 'За кількістю відгуків', value: 'reviews-desc' },
-  { name: 'За найвищим рейтингом', value: 'rating-desc' },
+  { name: "За зменшенням ціни", value: "price-desc" },
+  { name: "За зростанням ціни", value: "price-asc" },
+  { name: "За кількістю відгуків", value: "reviews-desc" },
+  { name: "За найвищим рейтингом", value: "rating-desc" },
 ]
 
 interface ITutorFilterProps {
+  totalLessons: number
   filter: LessonsFilterType
+  lessons: LessonType[] | null
+  setTotalLessons: React.Dispatch<React.SetStateAction<number>>
   setFilter: React.Dispatch<React.SetStateAction<LessonsFilterType>>
 }
 
-const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
+const TutorFilter: React.FC<ITutorFilterProps> = ({
+  filter,
+  setFilter,
+  lessons,
+  totalLessons,
+  setTotalLessons,
+}) => {
   const dispatch = useAppDispatch()
 
-  const [priceRange, setPriceRange] = React.useState<[number, number]>([0, 3000])
-  const [currentPage, setCurrentPage] = React.useState(1)
-  const [first, setFirst] = React.useState([0, 0, 0])
-  const [rows, setRows] = React.useState([10, 10, 10])
-
-  const [filteredItems, setFilteredItems] = React.useState<{ value: string; label: string }[]>([])
-
-  const onPageChange = (e: any, index: number) => {
-    setFirst(first.map((f, i) => (index === i ? e.first : f)))
-    setRows(rows.map((r, i) => (index === i ? e.rows : r)))
+  const onPageChange = (e: PaginatorPageChangeEvent) => {
+    setFilter((prev) => ({ ...prev, currentPage: e.page + 1 }))
   }
 
-  const onPageInputChange = (event: any) => {
-    setCurrentPage(event.target.value)
+  const findLessons = async () => {
+    const { payload } = await dispatch(getLessons(filter))
+    // @ts-ignore
+    setTotalLessons(payload.totalCount)
   }
 
-  const search = (event: AutoCompleteCompleteEvent) => {
-    let query = event.query
-    let _filteredItems = []
-
-    for (let i = 0; i < lessonsList.length; i++) {
-      let item = lessonsList[i]
-      if (item.label.toLowerCase().indexOf(query.toLowerCase()) === 0) {
-        _filteredItems.push(item)
-      }
-    }
-
-    setFilteredItems(_filteredItems)
-  }
-
-  const findLessons = () => {
-    dispatch(getLessons(filter))
-  }
+  React.useEffect(() => {
+    if (!lessons) return
+    findLessons()
+  }, [filter.currentPage])
 
   return (
     <div className={styles.filter}>
-      <h2 className={styles['filter-title']}>Знайдіть найкращого онлайн-репетитора</h2>
+      <h2 className={styles["filter-title"]}>Знайдіть найкращого онлайн-репетитора</h2>
 
-      <div className={styles['filter-item']}>
+      <div className={styles["filter-item"]}>
         <b>Я хочу вивчати:</b>
-
-        {/* <AutoComplete
-          dropdown
-          name="name"
-          field="label"
-          value={filter.name}
-          completeMethod={search}
-          suggestions={filteredItems}
-          className={styles['input-full-width']}
-          virtualScrollerOptions={{ itemSize: 38 }}
-          onSelect={(e) => setFilter((prev) => ({ ...prev, name: e.value.label }))}
-          onChange={(e: AutoCompleteChangeEvent) => setFilter((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
-        /> */}
 
         <AutoCompleteLessons
           name="name"
           value={filter.name}
+          lessonsList={lessonsList}
           onSelect={(e) => setFilter((prev) => ({ ...prev, name: e.value.label }))}
-          onChange={(e: AutoCompleteChangeEvent) => setFilter((prev) => ({ ...prev, [e.target.name]: e.target.value }))}
+          onChange={(e: AutoCompleteChangeEvent) =>
+            setFilter((prev) => ({ ...prev, name: e.value }))
+          }
         />
       </div>
 
-      <div className={styles['filter-item']}>
+      <div className={styles["filter-item"]}>
         <b>Ціна за урок:</b>
-        <div className={styles['price-range']}>
+        <div className={styles["price-range"]}>
           <span>{filter.price[0]}</span>
           <span>{filter.price[1]}</span>
         </div>
@@ -106,7 +87,7 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
         />
       </div>
 
-      <div className={styles['filter-item']}>
+      <div className={styles["filter-item"]}>
         <b>Сортувати за:</b>
         <br />
         <Dropdown
@@ -114,20 +95,20 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
           onChange={(e) => setFilter((prev) => ({ ...prev, sortBy: e.value }))}
           options={sortTypes}
           optionLabel="name"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           placeholder="Сортувати за"
         />
       </div>
 
-      <div className={styles['filter-item']}>
+      <div className={styles["filter-item"]}>
         <b>Пошук репетитора:</b>
         <br />
 
-        <div className={styles['search-wrapper']}>
-          <SearchIcon size={24} className={styles['search-icon']} />
+        <div className={styles["search-wrapper"]}>
+          <SearchIcon size={24} className={styles["search-icon"]} />
           <InputText
             placeholder="Пошук"
-            className={styles['input-full-width']}
+            className={styles["input-full-width"]}
             value={filter.tutorName}
             onChange={(e) => setFilter((prev) => ({ ...prev, tutorName: e.target.value }))}
           />
@@ -135,16 +116,24 @@ const TutorFilter: React.FC<ITutorFilterProps> = ({ filter, setFilter }) => {
       </div>
 
       <Paginator
-        first={first[0]}
-        rows={rows[0]}
-        totalRecords={120}
-        style={{ marginBottom: '20px' }}
-        onPageChange={(e) => onPageChange(e, 0)}
+        // current showed page
+        rows={filter.pageSize}
+        // total items count
+        totalRecords={totalLessons}
+        style={{ marginBottom: "20px" }}
+        onPageChange={(e) => onPageChange(e)}
+        // index of first item in current showed page
+        first={filter.currentPage * filter.pageSize - 1}
         template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       />
 
-      <Button style={{ width: '100%' }} label="Знайти" onClick={findLessons} />
-      <Button style={{ width: '100%', marginTop: '20px' }} label="Очистити фільтр" outlined />
+      <Button style={{ width: "100%" }} label="Знайти" onClick={findLessons} />
+      <Button
+        outlined
+        label="Очистити фільтр"
+        style={{ width: "100%", marginTop: "20px" }}
+        onClick={() => setFilter(filterInitialState)}
+      />
     </div>
   )
 }

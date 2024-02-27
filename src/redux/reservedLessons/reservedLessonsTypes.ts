@@ -1,4 +1,4 @@
-import { LoadingStatusTypes } from '../appTypes'
+import { LoadingStatusTypes } from "../appTypes"
 
 export type InitialStateType = {
   reservedLessons: ReservedLessonType[] | null
@@ -14,12 +14,14 @@ export type ReservedLessonType = {
   tutor: {
     id: number
     name: string
+    avatarUrl: string
   }
   student: {
     id: number
     name: string
+    avatarUrl: string
   }
-  status: 'planned' | 'conducted'
+  status: "planned" | "conducted"
   duration: number
   files: FileType[]
   meetUrl: string
@@ -36,6 +38,6 @@ export type FileType = {
     id: number
     name: string
   }
-  authorRole: 'tutor' | 'student'
+  authorRole: "tutor" | "student"
   createdAt: Date
 }

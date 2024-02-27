@@ -1,35 +1,42 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Button } from 'primereact/button'
-import { ProgressSpinner } from 'primereact/progressspinner'
+import React from "react"
+import { useSelector } from "react-redux"
 
-import styles from './HomePage.module.scss'
-import { useAppDispatch } from '../../redux/store'
-import TutorCard from '../../components/HomePage/TutorCard'
-import TutorFilter from '../../components/HomePage/TutorFilter'
-import { lessonsSelector } from '../../redux/lessons/lessonsSlice'
-import { getLessons } from '../../redux/lessons/lessonsAsyncActions'
-import { LessonsFilterType } from '../../api/apiTypes'
-import LoadingSpinner from '../../components/ui/LoadingSpinner/LoadingSpinner'
+import styles from "./HomePage.module.scss"
+import { useAppDispatch } from "../../redux/store"
+import { LessonsFilterType } from "../../api/apiTypes"
+import TutorCard from "../../components/HomePage/TutorCard"
+import TutorFilter from "../../components/HomePage/TutorFilter"
+import { lessonsSelector } from "../../redux/lessons/lessonsSlice"
+import { getLessons } from "../../redux/lessons/lessonsAsyncActions"
+import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
+import { LoadingStatusTypes } from "../../redux/appTypes"
 
-const filterInitialState: LessonsFilterType = {
-  name: '',
-  tutorName: '',
+export const filterInitialState: LessonsFilterType = {
+  name: "",
+  tutorName: "",
   price: [0, 3000],
-  sortBy: 'price-desc',
+  sortBy: "price-desc",
   currentPage: 1,
-  pageSize: 20,
+  pageSize: 3,
 }
 
 const HomePage = () => {
   const dispatch = useAppDispatch()
   const [filter, setFilter] = React.useState(filterInitialState)
+  const [totalLessons, setTotalLessons] = React.useState(0)
 
-  const { lessons } = useSelector(lessonsSelector)
+  const { lessons, loadingStatus } = useSelector(lessonsSelector)
 
+  // first
   React.useEffect(() => {
     if (!lessons) {
-      dispatch(getLessons(filter))
+      const fetchItems = async () => {
+        const { payload } = await dispatch(getLessons(filter))
+        // @ts-ignore
+        setTotalLessons(payload.totalCount)
+      }
+
+      fetchItems()
     }
   }, [])
 
@@ -37,10 +44,20 @@ const HomePage = () => {
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <div className={styles.tutors}>
-          {lessons ? lessons.map((lesson, index) => <TutorCard key={index} lesson={lesson} />) : <LoadingSpinner />}
+          {!lessons || loadingStatus === LoadingStatusTypes.LOADING ? (
+            <LoadingSpinner />
+          ) : (
+            lessons.map((lesson, index) => <TutorCard key={index} lesson={lesson} />)
+          )}
         </div>
 
-        <TutorFilter filter={filter} setFilter={setFilter} />
+        <TutorFilter
+          filter={filter}
+          lessons={lessons}
+          setFilter={setFilter}
+          totalLessons={totalLessons}
+          setTotalLessons={setTotalLessons}
+        />
       </div>
     </div>
   )

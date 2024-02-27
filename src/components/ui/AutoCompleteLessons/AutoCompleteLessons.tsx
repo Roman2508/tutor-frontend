@@ -1,21 +1,26 @@
-import React from 'react'
+import React from "react"
 import {
   AutoComplete,
   AutoCompleteSelectEvent,
   AutoCompleteChangeEvent,
   AutoCompleteCompleteEvent,
-} from 'primereact/autocomplete'
-
-import { lessonsList } from './lessonsList'
+} from "primereact/autocomplete"
 
 interface IAutoCompleteLessonsProps {
   value: string
+  lessonsList: { value: string; label: string }[]
   onChange: (e: AutoCompleteChangeEvent) => void
   onSelect: (e: AutoCompleteSelectEvent) => void
   [propName: string]: any
 }
 
-const AutoCompleteLessons: React.FC<IAutoCompleteLessonsProps> = ({ value, onChange, onSelect, propName }) => {
+const AutoCompleteLessons: React.FC<IAutoCompleteLessonsProps> = ({
+  value,
+  onChange,
+  onSelect,
+  lessonsList,
+  propName,
+}) => {
   const [filteredItems, setFilteredItems] = React.useState<{ value: string; label: string }[]>([])
 
   const search = (event: AutoCompleteCompleteEvent) => {
@@ -31,15 +36,15 @@ const AutoCompleteLessons: React.FC<IAutoCompleteLessonsProps> = ({ value, onCha
 
     setFilteredItems(_filteredItems)
   }
-  
+
   return (
     <AutoComplete
       dropdown
-      // {...propName}
+      {...propName}
       field="label"
       value={value}
       completeMethod={search}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       suggestions={filteredItems}
       virtualScrollerOptions={{ itemSize: 38 }}
       onSelect={(e: AutoCompleteSelectEvent) => onSelect(e)}

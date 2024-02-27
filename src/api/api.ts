@@ -18,6 +18,7 @@ import {
   UpdateTutorType,
   UpdateStudentType,
   AuthResponceType,
+  GetResevedLessonsResponceType,
 } from './apiTypes'
 import { AuthType } from '../redux/auth/authTypes'
 import { LessonType } from '../redux/lessons/lessonsType'
@@ -125,7 +126,7 @@ export const reviewsAPI = {
 
 export const reservedLessonsAPI = {
   getAll(payload: ReservedLessonsFilterType) {
-    return instanse.post<ReservedLessonType[]>('/reserved-lessons/get', payload)
+    return instanse.post<GetResevedLessonsResponceType>('/reserved-lessons/get', payload)
   },
   getOneById(id: number) {
     return instanse.get<ReservedLessonType>(`/reserved-lessons/${id}`)

@@ -1,19 +1,20 @@
-import React from 'react'
-import cn from 'classnames'
-import { useSelector } from 'react-redux'
-import { Button } from 'primereact/button'
-import { Dialog } from 'primereact/dialog'
-import { Message } from 'primereact/message'
-import { InputNumber } from 'primereact/inputnumber'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import React from "react"
+import cn from "classnames"
+import { useSelector } from "react-redux"
+import { Button } from "primereact/button"
+import { Dialog } from "primereact/dialog"
+import { Message } from "primereact/message"
+import { InputNumber } from "primereact/inputnumber"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
 
-import { useAppDispatch } from '../../redux/store'
-import { authSelector } from '../../redux/auth/authSlice'
-import styles from '../../pages/TutorPage/TutorPage.module.scss'
-import { createLesson, updateLesson } from '../../redux/lessons/lessonsAsyncActions'
-import AutoCompleteLessons from '../../components/ui/AutoCompleteLessons/AutoCompleteLessons'
-import { ILessonModalData } from '../../pages/TutorPage/TutorPage'
-import { InputText } from 'primereact/inputtext'
+import { useAppDispatch } from "../../redux/store"
+import { authSelector } from "../../redux/auth/authSlice"
+import styles from "../../pages/TutorPage/TutorPage.module.scss"
+import { createLesson, updateLesson } from "../../redux/lessons/lessonsAsyncActions"
+import AutoCompleteLessons from "../../components/ui/AutoCompleteLessons/AutoCompleteLessons"
+import { ILessonModalData } from "../../pages/TutorPage/TutorPage"
+import { InputText } from "primereact/inputtext"
+import { lessonsList } from "../ui/AutoCompleteLessons/lessonsList"
 
 export interface ILessonFormFilds {
   name: string
@@ -32,7 +33,8 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
 
   const { auth } = useSelector(authSelector)
 
-  const modalTitle = lessonModalData.modalType === 'create' ? 'Створити новий урок' : 'Оновити новий урок'
+  const modalTitle =
+    lessonModalData.modalType === "create" ? "Створити новий урок" : "Оновити новий урок"
 
   const {
     control,
@@ -41,18 +43,18 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
     formState: { errors },
     handleSubmit,
   } = useForm<ILessonFormFilds>({
-    mode: 'onBlur',
+    mode: "onBlur",
   })
 
   const onSubmit: SubmitHandler<ILessonFormFilds> = async (data) => {
     try {
       if (!auth) return
 
-      if (lessonModalData.modalType === 'create') {
+      if (lessonModalData.modalType === "create") {
         dispatch(createLesson({ ...data, tutor: auth.id }))
       }
 
-      if (lessonModalData.modalType === 'update') {
+      if (lessonModalData.modalType === "update") {
         dispatch(updateLesson({ ...data, id: lessonModalData.modalData.id }))
       }
 
@@ -61,36 +63,36 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
       // @ts-ignore
       console.error(error.message)
     } finally {
-      setValue('name', '')
-      setValue('price', 1)
-      setValue('duration', 20)
-      setValue('theme', '')
+      setValue("name", "")
+      setValue("price", 1)
+      setValue("duration", 20)
+      setValue("theme", "")
     }
   }
 
   React.useEffect(() => {
-    if (lessonModalData.modalType === 'update') {
-      setValue('name', lessonModalData.modalData.name)
-      setValue('price', lessonModalData.modalData.price)
-      setValue('duration', lessonModalData.modalData.duration)
-      setValue('theme', lessonModalData.modalData.theme)
+    if (lessonModalData.modalType === "update") {
+      setValue("name", lessonModalData.modalData.name)
+      setValue("price", lessonModalData.modalData.price)
+      setValue("duration", lessonModalData.modalData.duration)
+      setValue("theme", lessonModalData.modalData.theme)
     }
   }, [lessonModalData.modalType, lessonModalData.modalVisible])
 
   return (
     <Dialog
       header={modalTitle}
-      style={{ width: '360px' }}
+      style={{ width: "360px" }}
       visible={lessonModalData.modalVisible}
       onHide={() => setLessonModalData((prev) => ({ ...prev, modalVisible: false }))}
     >
       <div>
-        <form className={styles['create-lesson-form']} onSubmit={handleSubmit(onSubmit)}>
+        <form className={styles["create-lesson-form"]} onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="name"
             control={control}
             rules={{
-              required: 'Вкажіть назву уроку',
+              required: "Вкажіть назву уроку",
             }}
             render={({ field }) => {
               return (
@@ -99,11 +101,18 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
                   <AutoCompleteLessons
                     {...field}
                     placeholder="Ім'я"
-                    className={cn({ 'p-invalid': errors.name })}
-                    onSelect={(e) => setValue('name', e.value.label)}
-                    onChange={(e) => setValue('name', e.target.value)}
+                    lessonsList={lessonsList}
+                    className={cn({ "p-invalid": errors.name })}
+                    onSelect={(e) => setValue("name", e.value.label)}
+                    onChange={(e) => setValue("name", e.target.value)}
                   />
-                  {errors.name && <Message severity="error" style={{ width: '300px' }} text={errors.name?.message} />}
+                  {errors.name && (
+                    <Message
+                      severity="error"
+                      style={{ width: "300px" }}
+                      text={errors.name?.message}
+                    />
+                  )}
                 </div>
               )
             }}
@@ -113,8 +122,8 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
             name="theme"
             control={control}
             rules={{
-              minLength: { value: 3, message: 'Мінімальна довжина теми - 3 символа' },
-              maxLength: { value: 200, message: 'Максимальна довжина теми - 200 символів' },
+              minLength: { value: 3, message: "Мінімальна довжина теми - 3 символа" },
+              maxLength: { value: 200, message: "Максимальна довжина теми - 200 символів" },
             }}
             render={({ field }) => {
               return (
@@ -123,14 +132,20 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
 
                   <InputText
                     {...field}
-                    style={{ width: '100%' }}
-                    value={getValues('theme')}
-                    className={cn({ 'p-invalid': errors.theme })}
+                    style={{ width: "100%" }}
+                    value={getValues("theme")}
+                    className={cn({ "p-invalid": errors.theme })}
                     // @ts-ignore
-                    onChange={(e) => setValue('theme', e.value)}
+                    onChange={(e) => setValue("theme", e.value)}
                   />
 
-                  {errors.theme && <Message severity="error" style={{ width: '300px' }} text={errors.theme?.message} />}
+                  {errors.theme && (
+                    <Message
+                      severity="error"
+                      style={{ width: "300px" }}
+                      text={errors.theme?.message}
+                    />
+                  )}
                 </div>
               )
             }}
@@ -140,9 +155,9 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
             name="price"
             control={control}
             rules={{
-              min: { value: 1, message: 'Мінімальна ціна за урок 1 грн' },
-              max: { value: 3000, message: 'Максимальна ціна за урок 3000 грн' },
-              required: 'Вкажіть ціну за один урок',
+              min: { value: 1, message: "Мінімальна ціна за урок 1 грн" },
+              max: { value: 3000, message: "Максимальна ціна за урок 3000 грн" },
+              required: "Вкажіть ціну за один урок",
             }}
             render={({ field }) => {
               return (
@@ -152,14 +167,20 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
                   <InputNumber
                     {...field}
                     useGrouping={false}
-                    style={{ width: '100%' }}
-                    value={getValues('price')}
-                    className={cn({ 'p-invalid': errors.price })}
+                    style={{ width: "100%" }}
+                    value={getValues("price")}
+                    className={cn({ "p-invalid": errors.price })}
                     // @ts-ignore
-                    onChange={(e) => setValue('price', e.value)}
+                    onChange={(e) => setValue("price", e.value)}
                   />
 
-                  {errors.price && <Message severity="error" style={{ width: '300px' }} text={errors.price?.message} />}
+                  {errors.price && (
+                    <Message
+                      severity="error"
+                      style={{ width: "300px" }}
+                      text={errors.price?.message}
+                    />
+                  )}
                 </div>
               )
             }}
@@ -169,9 +190,9 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
             name="duration"
             control={control}
             rules={{
-              min: { value: 20, message: 'Мінімальна тривалість уроку 20 хв' },
-              max: { value: 240, message: 'Максимальна тривалість уроку 4 год' },
-              required: 'Вкажіть тривалість уроку',
+              min: { value: 20, message: "Мінімальна тривалість уроку 20 хв" },
+              max: { value: 240, message: "Максимальна тривалість уроку 4 год" },
+              required: "Вкажіть тривалість уроку",
             }}
             render={({ field }) => {
               return (
@@ -181,15 +202,19 @@ const LessonModal: React.FC<ILessonModalProps> = ({ lessonModalData, setLessonMo
                   <InputNumber
                     {...field}
                     useGrouping={false}
-                    style={{ width: '100%' }}
-                    value={getValues('duration')}
-                    className={cn({ 'p-invalid': errors.duration })}
+                    style={{ width: "100%" }}
+                    value={getValues("duration")}
+                    className={cn({ "p-invalid": errors.duration })}
                     // @ts-ignore
-                    onChange={(e) => setValue('duration', e.value)}
+                    onChange={(e) => setValue("duration", e.value)}
                   />
 
                   {errors.duration && (
-                    <Message severity="error" style={{ width: '300px' }} text={errors.duration?.message} />
+                    <Message
+                      severity="error"
+                      style={{ width: "300px" }}
+                      text={errors.duration?.message}
+                    />
                   )}
                 </div>
               )
