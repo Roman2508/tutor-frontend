@@ -55,12 +55,10 @@ export const deleteDialog = createAsyncThunk('dialogs/deleteDialog', async (payl
 /* === messages === */
 
 export const getMessages = createAsyncThunk('dialogs/getMessages', async (id: number, thunkAPI) => {
-  thunkAPI.dispatch(setAppAlert({ message: 'Завантаження', status: 'info' }))
   thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.LOADING))
 
   try {
     const { data } = await messagesAPI.getAll(id)
-    thunkAPI.dispatch(setAppAlert({ message: 'Повідомлення завантажено', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
   } catch (error) {

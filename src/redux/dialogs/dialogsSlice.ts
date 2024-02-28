@@ -43,7 +43,7 @@ const dialogsSlice = createSlice({
     /* deleteDialog */
     builder.addCase(deleteDialog.fulfilled, (state, action: PayloadAction<number>) => {
       if (!state.dialogs) return
-      const dialogs = state.dialogs.filter((el) => el.id === action.payload)
+      const dialogs = state.dialogs.filter((el) => el.id !== action.payload)
       state.dialogs = dialogs
       state.loadingStatus = LoadingStatusTypes.SUCCESS
     })
@@ -77,7 +77,7 @@ const dialogsSlice = createSlice({
     /* deleteMessages */
     builder.addCase(deleteMessages.fulfilled, (state, action: PayloadAction<number>) => {
       if (!state.messages) return
-      const messages = state.messages.filter((el) => el.id === action.payload)
+      const messages = state.messages.filter((el) => el.id !== action.payload)
       state.messages = messages
       state.loadingStatus = LoadingStatusTypes.SUCCESS
     })

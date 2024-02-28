@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 import {
   AuthMeType,
@@ -116,8 +116,8 @@ export const messagesAPI = {
 }
 
 export const reviewsAPI = {
-  create(payload: CreateReviewsType) {
-    return instanse.patch<ReviewsType>('/reviews', payload)
+  async create(payload: CreateReviewsType) {
+    return instanse.post<ReviewsType>('/reviews', payload)
   },
   remove(id: number) {
     return instanse.delete<number>(`/reviews/${id}`)

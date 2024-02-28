@@ -9,12 +9,10 @@ import { TutorType } from "./tutorsTypes"
 export const getTutor = createAsyncThunk(
   "lessons/getTutor",
   async (id: number, thunkAPI): Promise<TutorType> => {
-    thunkAPI.dispatch(setAppAlert({ message: "Завантаження...", status: "info" }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.LOADING))
 
     try {
       const { data } = await tutorsAPI.getById(id)
-      thunkAPI.dispatch(setAppAlert({ message: "Завантажено", status: "success" }))
       thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
       return data
     } catch (error) {

@@ -30,6 +30,7 @@ export type ReviewsType = {
     id: number
     name: string
     avatarUrl: string
+    userRole: 'tutor' | 'student'
   }
   // recipient: {
   //   id: number

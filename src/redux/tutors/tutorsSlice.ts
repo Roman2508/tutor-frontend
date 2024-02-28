@@ -57,7 +57,7 @@ const tutorSlice = createSlice({
     /* deleteReviews */
     builder.addCase(deleteReviews.fulfilled, (state, action: PayloadAction<number>) => {
       if (!state.tutor) return
-      const reviews = state.tutor.reviews.filter((el) => el.id === action.payload)
+      const reviews = state.tutor.reviews.filter((el) => el.id !== action.payload)
 
       state.tutor.reviews = reviews
       state.loadingStatus = LoadingStatusTypes.SUCCESS

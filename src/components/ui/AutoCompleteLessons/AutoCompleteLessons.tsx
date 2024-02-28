@@ -1,14 +1,19 @@
-import React from "react"
+import React from 'react'
 import {
   AutoComplete,
   AutoCompleteSelectEvent,
   AutoCompleteChangeEvent,
   AutoCompleteCompleteEvent,
-} from "primereact/autocomplete"
+} from 'primereact/autocomplete'
+
+export interface ISelectItems {
+  value: string
+  label: string
+}
 
 interface IAutoCompleteLessonsProps {
   value: string
-  lessonsList: { value: string; label: string }[]
+  selectList: ISelectItems[]
   onChange: (e: AutoCompleteChangeEvent) => void
   onSelect: (e: AutoCompleteSelectEvent) => void
   [propName: string]: any
@@ -18,7 +23,7 @@ const AutoCompleteLessons: React.FC<IAutoCompleteLessonsProps> = ({
   value,
   onChange,
   onSelect,
-  lessonsList,
+  selectList,
   propName,
 }) => {
   const [filteredItems, setFilteredItems] = React.useState<{ value: string; label: string }[]>([])
@@ -27,8 +32,8 @@ const AutoCompleteLessons: React.FC<IAutoCompleteLessonsProps> = ({
     let query = event.query
     let _filteredItems = []
 
-    for (let i = 0; i < lessonsList.length; i++) {
-      let item = lessonsList[i]
+    for (let i = 0; i < selectList.length; i++) {
+      let item = selectList[i]
       if (item.label.toLowerCase().indexOf(query.toLowerCase()) === 0) {
         _filteredItems.push(item)
       }
@@ -44,7 +49,7 @@ const AutoCompleteLessons: React.FC<IAutoCompleteLessonsProps> = ({
       field="label"
       value={value}
       completeMethod={search}
-      style={{ width: "100%" }}
+      style={{ width: '100%' }}
       suggestions={filteredItems}
       virtualScrollerOptions={{ itemSize: 38 }}
       onSelect={(e: AutoCompleteSelectEvent) => onSelect(e)}

@@ -6,6 +6,7 @@ const LoadingSpinner = () => {
     <div
       style={{
         height: '75vh',
+        width: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

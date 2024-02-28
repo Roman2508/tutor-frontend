@@ -1,31 +1,54 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import { Rating } from 'primereact/rating'
+import { Button } from 'primereact/button'
+import { MdOutlineDelete as DeleteIcon } from 'react-icons/md'
 
 import Avatar from '../ui/Avatar/Avatar'
 import styles from './TutorPage.module.scss'
 import { ReviewsType } from '../../redux/tutors/tutorsTypes'
+import { useAppDispatch } from '../../redux/store'
+import { deleteReviews } from '../../redux/tutors/tutorsAsyncActions'
 
 interface ITutorReviewsProps {
   reviews: ReviewsType
+  user: { id: number; userRole: 'tutor' | 'student' }
 }
 
-const TutorReviews: React.FC<ITutorReviewsProps> = ({ reviews }) => {
-  const sendedDate = dayjs(reviews.createdAt).format('MMMM DD, YYYY')
+const TutorReviews: React.FC<ITutorReviewsProps> = ({ reviews, user }) => {
+  const dispatch = useAppDispatch()
+
+  const sendedDate = dayjs(reviews.createdAt).format('HH:MM:ss - MMMM DD, YYYY')
+
+  const isShowEditButton = user.id === reviews.sender.id && user.userRole === reviews.sender.userRole
+
+  const onDeleteReviews = () => {
+    if (window.confirm('Ви дійсно хочете видалити відгук?')) {
+      dispatch(deleteReviews(reviews.id))
+    }
+  }
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.top}>
-        <Avatar size="small" src={reviews.sender.avatarUrl} />
-        <div className={styles.info}>
-          <h6 className={styles.name}>{reviews.sender.name}</h6>
-          <span className={styles['created-at']}>{sendedDate}</span>
+      <div>
+        <div className={styles.top}>
+          <Avatar size="small" src={reviews.sender.avatarUrl} />
+          <div className={styles.info}>
+            <h6 className={styles.name}>{reviews.sender.name}</h6>
+            <span className={styles['created-at']}>{sendedDate}</span>
+          </div>
         </div>
+
+        <Rating value={reviews.rating} cancel={false} stars={5} readOnly />
+
+        <p>{reviews.message}</p>
       </div>
 
-      <Rating value={reviews.rating} cancel={false} stars={5} readOnly />
-
-      <p className={styles.comment}>{reviews.message}</p>
+      {isShowEditButton && (
+        <Button style={{ padding: '6px', minWidth: '33px' }} onClick={onDeleteReviews} outlined>
+          <DeleteIcon size={20} />
+        </Button>
+      )}
     </div>
   )
 }
