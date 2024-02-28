@@ -61,7 +61,7 @@ const AddReviewsModal: React.FC<IAddReviewsModalProps> = ({ visible, setVisible 
       console.error(error)
     }
   }
-  console.log(errors)
+  
   return (
     <Dialog header="Залишити відгук" visible={visible} style={{ width: '360px' }} onHide={() => setVisible(false)}>
       <b>Відгук:</b>

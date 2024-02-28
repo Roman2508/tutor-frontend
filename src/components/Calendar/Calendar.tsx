@@ -17,14 +17,15 @@ const localizer = dayjsLocalizer(dayjs)
 
 interface ICalendarProps {
   events?: Event[]
+  onClick?: (e: Event) => void
 }
 
-const Calendar: React.FC<ICalendarProps> = ({ events = [] }) => {
+const Calendar: React.FC<ICalendarProps> = ({ events = [], onClick = () => {} }) => {
   return (
     <div>
       <CalendarComponent
-        onSelectEvent={(e) => console.log(e)}
-        onDoubleClickEvent={(e) => console.log(e)}
+        onSelectEvent={onClick}
+        onDoubleClickEvent={onClick}
         localizer={localizer}
         events={events}
         defaultView="week"

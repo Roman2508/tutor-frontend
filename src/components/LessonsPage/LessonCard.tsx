@@ -1,19 +1,28 @@
 import React from "react"
+import dayjs from "dayjs"
 import cn from "classnames"
 import { Card } from "primereact/card"
 import { Link } from "react-router-dom"
+import { RiEdit2Line as EditIcon } from "react-icons/ri"
 
 import Avatar from "../ui/Avatar/Avatar"
+import { Button } from "primereact/button"
 import styles from "./LessonsPage.module.scss"
 import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
-import dayjs from "dayjs"
 
 interface ILessonCardProps {
   lesson: ReservedLessonType
   userRole: "tutor" | "student"
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>
+  setEditableLesson: React.Dispatch<React.SetStateAction<ReservedLessonType | null>>
 }
 
-const LessonCard: React.FC<ILessonCardProps> = ({ lesson, userRole }) => {
+const LessonCard: React.FC<ILessonCardProps> = ({
+  lesson,
+  userRole,
+  setVisible,
+  setEditableLesson,
+}) => {
   const user = {
     name: userRole === "tutor" ? lesson.student.name : lesson.tutor.name,
     avatarUrl: userRole === "tutor" ? lesson.student.avatarUrl : lesson.student.avatarUrl,
@@ -23,31 +32,71 @@ const LessonCard: React.FC<ILessonCardProps> = ({ lesson, userRole }) => {
   const date = dayjs(lesson.startAt).add(lesson.duration, "minute").format("DD.MM.YY - hh:mm")
 
   return (
-    <Link to={`/lesson/${lesson.id}`} style={{ textDecoration: "none" }}>
-      <Card style={{ marginBottom: "20px" }}>
-        <div className={styles.wrapper}>
-          <div className={styles.col}>
-            <Avatar size="large" shape="square" src={user.avatarUrl} />
-          </div>
+    <Card style={{ marginBottom: "20px" }}>
+      <div className={styles.wrapper}>
+        <Link
+          to={`/lesson/${lesson.id}`}
+          className={styles["left-col"]}
+          style={{ textDecoration: "none" }}
+        >
+          <Avatar size="large" shape="square" src={user.avatarUrl} />
+        </Link>
 
-          <div className={cn(styles.col, styles["main-content"])}>
-            <h4 className={styles["user-name"]}>{user.name}</h4>
+        <Link
+          to={`/lesson/${lesson.id}`}
+          style={{ textDecoration: "none" }}
+          className={cn(styles.col, styles["main-content"])}
+        >
+          <h4 className={styles["user-name"]}>{user.name}</h4>
 
-            <p className={styles["lesson-name"]}>{lesson.name}</p>
-            {lesson.theme && <p className={styles["lesson-theme"]}>{lesson.theme}</p>}
-          </div>
+          <p className={styles["lesson-name"]}>{lesson.name}</p>
+          {lesson.theme && <p className={styles["lesson-theme"]}>{lesson.theme}</p>}
+        </Link>
 
-          <div className={styles.col}>
-            <div className={styles["status-wrapper"]}>
-              <div className={cn(styles.badge, styles[lesson.status])}></div>
-              <p className={styles.status}>{status}</p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <div className={styles["right-col"]}>
+            <div>
+              <p className={styles.price}>{lesson.price} грн.</p>
+              <p className={styles.duration}>{lesson.duration} хв. урок </p>
             </div>
 
-            <p className={styles.date}>{date}</p>
+            <div style={{ marginLeft: "30px" }}>
+              <div className={styles["status-wrapper"]}>
+                <div className={cn(styles.badge, styles[lesson.status])}></div>
+                <p className={styles.status}>{status}</p>
+              </div>
+
+              <p className={styles.date}>{date}</p>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {lesson.meetUrl && (
+              <a href={lesson.meetUrl} className={styles.link} target="_blank">
+                Посилання на онлайн-урок
+              </a>
+            )}
+            <Button
+              outlined
+              onClick={() => {
+                setEditableLesson(lesson)
+                setVisible(true)
+              }}
+              title="Прикріпити посилання на онлайн урок"
+            >
+              <EditIcon size={24} />
+            </Button>
           </div>
         </div>
-      </Card>
-    </Link>
+      </div>
+    </Card>
   )
 }
 

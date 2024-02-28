@@ -4,12 +4,12 @@ import { useSelector } from "react-redux"
 import styles from "./HomePage.module.scss"
 import { useAppDispatch } from "../../redux/store"
 import { LessonsFilterType } from "../../api/apiTypes"
+import { LoadingStatusTypes } from "../../redux/appTypes"
 import TutorCard from "../../components/HomePage/TutorCard"
 import TutorFilter from "../../components/HomePage/TutorFilter"
 import { lessonsSelector } from "../../redux/lessons/lessonsSlice"
 import { getLessons } from "../../redux/lessons/lessonsAsyncActions"
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
-import { LoadingStatusTypes } from "../../redux/appTypes"
 
 export const filterInitialState: LessonsFilterType = {
   name: "",

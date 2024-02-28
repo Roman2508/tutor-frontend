@@ -110,10 +110,9 @@ export type UpdateReservedLessonsType = {
   id: number
   theme: string
   price: number
-  status: string
+  status: "planned" | "conducted"
   duration: number
   meetUrl: string
-  startAt: Date
 }
 
 export type GetResevedLessonsResponceType = {
