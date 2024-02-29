@@ -1,29 +1,59 @@
 import React from 'react'
+import dayjs from 'dayjs'
 import cn from 'classnames'
 import { Card } from 'primereact/card'
-import { Ripple } from 'primereact/ripple'
+import { useSelector } from 'react-redux'
+import { Button } from 'primereact/button'
 import { Divider } from 'primereact/divider'
-import { MdOutlineDownload } from 'react-icons/md'
-import { FaRegFile as FileIcon } from 'react-icons/fa'
-import { MdOutlineDeleteOutline } from 'react-icons/md'
-import { FaRegFilePdf as PdfFileIcon } from 'react-icons/fa6'
-import { FaRegFileWord as WordFileIcon } from 'react-icons/fa'
-import { FaRegFileImage as ImageFileIcon } from 'react-icons/fa'
-import { FaRegFilePowerpoint as PowerpointFileIcon } from 'react-icons/fa6'
+import { useParams } from 'react-router-dom'
 
 import styles from './FullLessonPage.module.scss'
+import { useAppDispatch } from '../../redux/store'
+import File from '../../components/LessonsPage/File'
 import Avatar from '../../components/ui/Avatar/Avatar'
+import EmptyImage from '../../../public/empty-image.png'
 import UploadFile from '../../components/LessonsPage/UploadFile'
-import { Button } from 'primereact/button'
+import LoadingSpinner from '../../components/ui/LoadingSpinner/LoadingSpinner'
+import { reservedLessonsSelector } from '../../redux/reservedLessons/reservedLessonsSlice'
+import { getReservedLessonById } from '../../redux/reservedLessons/reservedLessonsAsyncActions'
+import { FileType, ReservedLessonType } from '../../redux/reservedLessons/reservedLessonsTypes'
 
 const FullLessonPage = () => {
-  const files = [
-    { id: 1, name: 'File name', icon: <FileIcon size={50} /> },
-    { id: 1, name: 'File name File name File name ', icon: <PdfFileIcon size={50} /> },
-    { id: 1, name: 'File name File name ', icon: <WordFileIcon size={50} /> },
-    { id: 1, name: 'File name', icon: <PowerpointFileIcon size={50} /> },
-    { id: 1, name: 'File name File name ', icon: <ImageFileIcon size={50} /> },
-  ]
+  const params = useParams()
+
+  const dispatch = useAppDispatch()
+
+  const { fullLesson } = useSelector(reservedLessonsSelector)
+  const [tutorFiles, setTutorFiles] = React.useState<FileType[]>([])
+  const [studentFiles, setStudentFiles] = React.useState<FileType[]>([])
+
+  React.useEffect(() => {
+    if (!params.id) return
+    const fetchData = async () => {
+      const { payload } = await dispatch(getReservedLessonById(Number(params.id)))
+      const tutorFiles: FileType[] = []
+      const studentFiles: FileType[] = []
+
+      const files = (payload as ReservedLessonType).files
+
+      files.forEach((file) => {
+        if (file.authorRole === 'tutor') {
+          tutorFiles.push(file)
+        } else {
+          studentFiles.push(file)
+        }
+      })
+
+      setTutorFiles(tutorFiles)
+      setStudentFiles(studentFiles)
+    }
+
+    fetchData()
+  }, [])
+
+  if (!fullLesson || !params.id) {
+    return <LoadingSpinner />
+  }
 
   return (
     <div className={styles.container}>
@@ -34,66 +64,66 @@ const FullLessonPage = () => {
           </div>
 
           <div className={cn(styles.col, styles['main-content'])}>
-            <h4 className={styles['user-name']}>Boris Johnson</h4>
+            <h4 className={styles['user-name']}>{fullLesson.tutor.name}</h4>
 
-            <p className={styles['lesson-name']}>Англійська мова</p>
-            <p className={styles['lesson-theme']}>Unit 4 Develop your Vocabulary pp. 100</p>
+            <p className={styles['lesson-name']}>{fullLesson.name}</p>
+            <p className={styles['lesson-theme']}>{fullLesson.theme}</p>
           </div>
 
           <div className={styles.col}>
             <div className={styles.s}>
               <div className={styles['status-wrapper']}>
-                <div className={styles.badge}></div>
-                <p className={styles.status}>Заплановано</p>
+                <div
+                  className={cn(styles.badge, {
+                    [styles.planned]: fullLesson.status === 'planned',
+                    [styles.conducted]: fullLesson.status === 'conducted',
+                  })}
+                ></div>
+                <p className={styles.status}>{fullLesson.status === 'planned' ? 'Заплановано' : 'Проведено'}</p>
               </div>
 
-              <p className={styles.date}>17.02.2024</p>
+              <p className={styles.date}>{dayjs(fullLesson.startAt).format('hh:mm - DD.MM.YYYY')}</p>
             </div>
 
-            <a className={styles.link} href="https://meet.google.com/uge-cwpv-aug" target="_blank">
-              <Button label="Посилання на онлайн-урок" outlined />
-            </a>
-            {/* <a className={styles.link} href="https://meet.google.com/uge-cwpv-aug" target="_blank">
-              Посилання на онлайн-урок
-            </a> */}
+            {fullLesson.meetUrl && (
+              <a className={styles.link} href={fullLesson.meetUrl} target="_blank">
+                <Button label="Посилання на онлайн-урок" outlined />
+              </a>
+            )}
           </div>
         </div>
 
         <Divider />
 
+        <h4 className={styles['files-title']}>Завдання:</h4>
         <div className={styles.files}>
-          {files.map((el) => (
-            <div className={styles.file} key={el.id} title={`Завантажити: ${el.name}`}>
-              {el.icon}
-              <p>File name</p>
-              <div className={styles['file-controls']}>
-                <div className={styles['file-controls-icon']}>
-                  <MdOutlineDownload size={25} />
-                  <Ripple
-                    /* @ts-ignore */
-                    pt={{
-                      root: { style: { background: 'rgba(0, 0, 0, 0.2)' } },
-                    }}
-                  />
-                </div>
-
-                <div className={styles['file-controls-icon']}>
-                  <MdOutlineDeleteOutline size={25} />
-                  <Ripple
-                    /* @ts-ignore */
-                    pt={{
-                      root: { style: { background: 'rgba(0, 0, 0, 0.2)' } },
-                    }}
-                  />
-                </div>
-              </div>
+          {tutorFiles.length ? (
+            tutorFiles.map((el) => <File file={el} key={el.id} />)
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%' }}>
+              <img alt="empty image" src={EmptyImage} width={100} />
+              <h5 style={{ margin: 0 }}>Файли не завантажені</h5>
             </div>
-          ))}
+          )}
         </div>
 
         <Divider />
 
-        <UploadFile />
+        <h4 className={styles['files-title']}>Ваші роботи:</h4>
+        <div className={styles.files}>
+          {studentFiles.length ? (
+            studentFiles.map((el) => <File file={el} key={el.id} />)
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%' }}>
+              <img alt="empty image" src={EmptyImage} width={100} />
+              <h5 style={{ margin: 0 }}>Файли не завантажені</h5>
+            </div>
+          )}
+        </div>
+
+        <Divider />
+
+        <UploadFile lessonId={Number(params.id)} />
       </Card>
     </div>
   )

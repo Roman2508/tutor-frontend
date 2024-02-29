@@ -19,12 +19,13 @@ import {
   UpdateStudentType,
   AuthResponceType,
   GetResevedLessonsResponceType,
+  UploadFileType,
 } from './apiTypes'
 import { AuthType } from '../redux/auth/authTypes'
 import { LessonType } from '../redux/lessons/lessonsType'
 import { DialogType } from '../redux/dialogs/dialogsTypes'
 import { ReviewsType, TutorType } from '../redux/tutors/tutorsTypes'
-import { ReservedLessonType } from '../redux/reservedLessons/reservedLessonsTypes'
+import { FileType, ReservedLessonType } from '../redux/reservedLessons/reservedLessonsTypes'
 
 const instanse = axios.create({
   baseURL: 'http://localhost:7777/',
@@ -140,5 +141,18 @@ export const reservedLessonsAPI = {
   },
   delete(id: number) {
     return instanse.delete<number>(`/reserved-lessons/${id}`)
+  },
+}
+
+export const filesAPI = {
+  upload(payload: UploadFileType) {
+    const { lessonId, file } = payload
+
+    const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+
+    return instanse.post<FileType>(`/files/${lessonId}`, file, config)
+  },
+  delete(fileId: number) {
+    return instanse.delete<number>(`/files/${fileId}`)
   },
 }

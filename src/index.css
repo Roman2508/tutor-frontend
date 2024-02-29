@@ -33,15 +33,13 @@ body,
   margin: 0;
   padding: 0;
   height: 100%;
+  overflow-x: hidden;
 }
 
 .main {
-  /* min-height: 100%; */
   min-height: calc(100% - 62px);
   background-image: url(https://www.primefaces.org/cdn/primereact/images/layout/pattern.png),
     radial-gradient(50% 50% at center top, var(--primary-100) 0%, var(--primary-50) 100%);
-  /* background-image: url(https://www.primefaces.org/cdn/primereact/images/layout/pattern.png),
-    radial-gradient(50% 50% at center top, var(--primary-100) 0%, #fff 100%); */
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
