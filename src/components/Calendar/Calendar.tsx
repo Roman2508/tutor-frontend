@@ -32,7 +32,7 @@ const Calendar: React.FC<ICalendarProps> = ({ events = [], onClick = () => {} })
         views={["week"]}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500 }}
+        style={{ height: 600 }}
         culture={"fr"}
         messages={{
           next: "Наступний тиждень",

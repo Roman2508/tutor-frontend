@@ -1,8 +1,8 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-import { RootState } from '../store'
-import { LoadingStatusTypes } from '../appTypes'
-import { FileType, InitialStateType, ReservedLessonType } from './reservedLessonsTypes'
+import { RootState } from "../store"
+import { LoadingStatusTypes } from "../appTypes"
+import { FileType, InitialStateType, ReservedLessonType } from "./reservedLessonsTypes"
 import {
   createReservedLesson,
   deleteFile,
@@ -11,8 +11,8 @@ import {
   getReservedLessons,
   updateReservedLesson,
   uploadFile,
-} from './reservedLessonsAsyncActions'
-import { GetResevedLessonsResponceType } from '../../api/apiTypes'
+} from "./reservedLessonsAsyncActions"
+import { GetResevedLessonsResponceType } from "../../api/apiTypes"
 
 const reservedLessonsInitialState: InitialStateType = {
   reservedLessons: null,
@@ -21,7 +21,7 @@ const reservedLessonsInitialState: InitialStateType = {
 }
 
 const reservedLessonsSlice = createSlice({
-  name: 'reservedLessons',
+  name: "reservedLessons",
   initialState: reservedLessonsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
@@ -30,36 +30,48 @@ const reservedLessonsSlice = createSlice({
   },
   extraReducers: (builder) => {
     /* getReservedLessons */
-    builder.addCase(getReservedLessons.fulfilled, (state, action: PayloadAction<GetResevedLessonsResponceType>) => {
-      state.reservedLessons = action.payload.entities
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    builder.addCase(
+      getReservedLessons.fulfilled,
+      (state, action: PayloadAction<GetResevedLessonsResponceType>) => {
+        state.reservedLessons = action.payload.entities
+        state.loadingStatus = LoadingStatusTypes.SUCCESS
+      }
+    )
 
     /* getReservedLessonById */
-    builder.addCase(getReservedLessonById.fulfilled, (state, action: PayloadAction<ReservedLessonType>) => {
-      state.fullLesson = action.payload
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    builder.addCase(
+      getReservedLessonById.fulfilled,
+      (state, action: PayloadAction<ReservedLessonType>) => {
+        state.fullLesson = action.payload
+        state.loadingStatus = LoadingStatusTypes.SUCCESS
+      }
+    )
 
     /* createReservedLesson */
-    builder.addCase(createReservedLesson.fulfilled, (state, action: PayloadAction<ReservedLessonType>) => {
-      if (!state.reservedLessons) return
-      state.reservedLessons.push(action.payload)
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    builder.addCase(
+      createReservedLesson.fulfilled,
+      (state, action: PayloadAction<ReservedLessonType>) => {
+        if (!state.reservedLessons) return
+        state.reservedLessons.push(action.payload)
+        state.loadingStatus = LoadingStatusTypes.SUCCESS
+      }
+    )
 
     /* updateReservedLesson */
-    builder.addCase(updateReservedLesson.fulfilled, (state, action: PayloadAction<ReservedLessonType>) => {
-      if (!state.reservedLessons) return
-      const reservedLessons = state.reservedLessons.map((el) => {
-        if (el.id === action.payload.id) {
-          return { ...el, ...action.payload }
-        }
-        return el
-      })
-      state.reservedLessons = reservedLessons
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    builder.addCase(
+      updateReservedLesson.fulfilled,
+      (state, action: PayloadAction<ReservedLessonType>) => {
+        if (!state.reservedLessons) return
+        const reservedLessons = state.reservedLessons.map((el) => {
+          if (el.id === action.payload.id) {
+            return { ...el, ...action.payload }
+          }
+          return el
+        })
+        state.reservedLessons = reservedLessons
+        state.loadingStatus = LoadingStatusTypes.SUCCESS
+      }
+    )
 
     /* deleteReservedLesson */
     builder.addCase(deleteReservedLesson.fulfilled, (state, action: PayloadAction<number>) => {
@@ -77,12 +89,15 @@ const reservedLessonsSlice = createSlice({
     })
 
     /* deleteFile */
-    builder.addCase(deleteFile.fulfilled, (state, action: PayloadAction<number>) => {
-      if (!state.fullLesson) return
-      const files = state.fullLesson.files.filter((el) => el.id !== action.payload)
-      state.fullLesson.files = files
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
+    builder.addCase(
+      deleteFile.fulfilled,
+      (state, action: PayloadAction<{ id: number; filename: string }>) => {
+        if (!state.fullLesson) return
+        const files = state.fullLesson.files.filter((el) => el.id !== action.payload.id)
+        state.fullLesson.files = files
+        state.loadingStatus = LoadingStatusTypes.SUCCESS
+      }
+    )
   },
 })
 

@@ -1,21 +1,21 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { PrimeReactProvider } from 'primereact/api'
-import { Route, Routes, BrowserRouter, useNavigate } from 'react-router-dom'
+import React from "react"
+import { Provider } from "react-redux"
+import { PrimeReactProvider } from "primereact/api"
+import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom"
 
-import 'react-toastify/dist/ReactToastify.css'
-import Layout from './components/layout/Layout'
-import HomePage from './pages/HomePage/HomePage'
-import AuthPage from './pages/AuthPage/AuthPage'
-import TutorPage from './pages/TutorPage/TutorPage'
-import { store, useAppDispatch } from './redux/store'
-import AppAlert from './components/AppAlert/AppAlert'
-import { authMe } from './redux/auth/authAsyncActions'
-import CalendarPage from './pages/CalendarPage/CalendarPage'
-import MessagesPage from './pages/MessagesPage/MessagesPage'
-import FullLessonPage from './pages/FullLessonPage/FullLessonPage'
-import SettingsPage from './pages/SettingsPage/SettingsPage'
-import ReservedLessonsPage from './pages/ReservedLessonsPage/ReservedLessonsPage'
+import "react-toastify/dist/ReactToastify.css"
+import Layout from "./components/layout/Layout"
+import HomePage from "./pages/HomePage/HomePage"
+import AuthPage from "./pages/AuthPage/AuthPage"
+import TutorPage from "./pages/TutorPage/TutorPage"
+import { store, useAppDispatch } from "./redux/store"
+import AppAlert from "./components/AppAlert/AppAlert"
+import { authMe } from "./redux/auth/authAsyncActions"
+import CalendarPage from "./pages/CalendarPage/CalendarPage"
+import MessagesPage from "./pages/MessagesPage/MessagesPage"
+import FullLessonPage from "./pages/FullLessonPage/FullLessonPage"
+import SettingsPage from "./pages/SettingsPage/SettingsPage"
+import ReservedLessonsPage from "./pages/ReservedLessonsPage/ReservedLessonsPage"
 
 const value = {
   ripple: true,
@@ -26,12 +26,12 @@ const App = () => {
   const navigate = useNavigate()
 
   React.useEffect(() => {
-    const token = window.localStorage.getItem('tutor-token')
+    const token = window.localStorage.getItem("tutor-token")
 
     if (token) {
       dispatch(authMe({ token }))
     } else {
-      navigate('/auth')
+      navigate("/auth")
     }
   }, [])
 
@@ -60,8 +60,9 @@ const App = () => {
 
 export default App
 
+// distribution of access
 // messages page
-// reserved-lessons filter]
-// upload file in reserved-lesson 
+// reserved-lessons filter
 // saved lessons
 // upload user avatars
+// delete lessons

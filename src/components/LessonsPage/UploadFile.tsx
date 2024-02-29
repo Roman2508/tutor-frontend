@@ -1,40 +1,62 @@
-import React from 'react'
+import React from "react"
 import {
   ItemTemplateOptions,
   FileUploadSelectEvent,
-  FileUploadUploadEvent,
-  FileUploadHeaderTemplateOptions,
-  FileUpload as UploadComponent,
   FileUploadHandlerEvent,
-} from 'primereact/fileupload'
-import { Tag } from 'primereact/tag'
-import { Toast } from 'primereact/toast'
-import { IoClose } from 'react-icons/io5'
-import { Button } from 'primereact/button'
-import { Tooltip } from 'primereact/tooltip'
-import { IoImageOutline } from 'react-icons/io5'
-import { ProgressBar } from 'primereact/progressbar'
-import { AiOutlineCloudUpload } from 'react-icons/ai'
-import { FaRegFile as FileIcon } from 'react-icons/fa'
-import { FaRegImages as SelectFilesIcon } from 'react-icons/fa'
-import { useAppDispatch } from '../../redux/store'
-import { uploadFile } from '../../redux/reservedLessons/reservedLessonsAsyncActions'
+  FileUpload as UploadComponent,
+  FileUploadHeaderTemplateOptions,
+} from "primereact/fileupload"
+import { Tag } from "primereact/tag"
+import { toast } from "react-toastify"
+import { IoClose } from "react-icons/io5"
+import { Button } from "primereact/button"
+import { Tooltip } from "primereact/tooltip"
+import { IoImageOutline } from "react-icons/io5"
+import { ProgressBar } from "primereact/progressbar"
+import { AiOutlineCloudUpload } from "react-icons/ai"
+import { FaRegFile as FileIcon } from "react-icons/fa"
+import { FaRegImages as SelectFilesIcon } from "react-icons/fa"
+
+import { useAppDispatch } from "../../redux/store"
+import { AuthType } from "../../redux/auth/authTypes"
+import { uploadFile } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
+import { transliterateCyrillicToLatin } from "../../helpers/transliterateCyrillicToLatin"
+import { FileType } from "../../redux/reservedLessons/reservedLessonsTypes"
 
 interface IUploadFileProps {
+  auth: AuthType
   lessonId: number
+  totalFilesCount: { tutor: number; student: number }
+  setTutorFiles: React.Dispatch<React.SetStateAction<FileType[]>>
+  setStudentFiles: React.Dispatch<React.SetStateAction<FileType[]>>
 }
 
-const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
+const UploadFile: React.FC<IUploadFileProps> = ({
+  auth,
+  lessonId,
+  totalFilesCount,
+  setTutorFiles,
+  setStudentFiles,
+}) => {
   const dispatch = useAppDispatch()
 
-  const toast = React.useRef<Toast | null>(null)
   const [totalSize, setTotalSize] = React.useState(0)
-  const [totalFilesCount, setTotalFilesCount] = React.useState(0)
   const fileUploadRef = React.useRef<UploadComponent | null>(null)
 
-  const onTemplateSelect = (e: FileUploadSelectEvent) => {
-    let _totalSize = totalSize
+  const onBeforeSelect = (e: FileUploadSelectEvent) => {
     let files = e.files
+
+    const allFilesCount = totalFilesCount[auth.userRole] + files.length
+
+    if (allFilesCount > 4) {
+      toast.error("Можна завантажити максимум 5 файлів")
+      return false
+    }
+  }
+
+  const onTemplateSelect = (e: FileUploadSelectEvent) => {
+    let files = e.files
+    let _totalSize = totalSize
 
     Object.keys(files).forEach((key) => {
       _totalSize += files[key as any].size || 0
@@ -44,7 +66,7 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
   }
 
   const onTemplateUpload = async (e: FileUploadHandlerEvent) => {
-    if (!toast.current) return
+    if (!fileUploadRef.current) return
 
     let _totalSize = 0
 
@@ -53,16 +75,26 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
     })
 
     setTotalSize(_totalSize)
-    toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' })
 
-    Promise.allSettled(
+    await Promise.allSettled(
       e.files.map(async (file: File) => {
-        const formData = new FormData()
-        formData.append('file', file)
+        // Rename file
+        const _file = new File([file], transliterateCyrillicToLatin(file.name), { type: file.type })
 
-        await dispatch(uploadFile({ file: formData, lessonId }))
+        const formData = new FormData()
+        formData.append("file", _file)
+
+        const { payload } = await dispatch(uploadFile({ file: formData, lessonId }))
+
+        if ((payload as FileType).authorRole === "tutor") {
+          setTutorFiles((prev) => [...prev, payload as FileType])
+        } else {
+          setStudentFiles((prev) => [...prev, payload as FileType])
+        }
       })
     )
+
+    fileUploadRef.current.clear()
   }
 
   const onTemplateRemove = (file: File, callback: any) => {
@@ -76,17 +108,18 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
 
   const headerTemplate = (options: FileUploadHeaderTemplateOptions) => {
     const { className, chooseButton, uploadButton, cancelButton } = options
-    const value = totalSize / 200000
-    const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B'
+    const value = totalSize / 50000
+    const formatedValue =
+      fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : "0 B"
 
     return (
       <div
         className={className}
         style={{
-          backgroundColor: 'transparent',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          backgroundColor: "transparent",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <div>
@@ -95,8 +128,12 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
           {cancelButton}
         </div>
         <div>
-          <span>{formatedValue} / 20 MB</span>
-          <ProgressBar value={value} showValue={false} style={{ width: '10rem', height: '12px' }}></ProgressBar>
+          <span>{formatedValue} / 5 MB</span>
+          <ProgressBar
+            value={value}
+            showValue={false}
+            style={{ width: "10rem", height: "12px" }}
+          ></ProgressBar>
         </div>
       </div>
     )
@@ -104,8 +141,8 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
 
   const itemTemplate = (file: any, props: ItemTemplateOptions) => {
     return (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           {file.objectURL ? (
             <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
           ) : (
@@ -113,21 +150,21 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
           )}
           <span
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              textAlign: 'left',
-              marginLeft: '16px',
+              display: "flex",
+              flexDirection: "column",
+              textAlign: "left",
+              marginLeft: "16px",
             }}
           >
             {file.name}
             <small>{new Date().toLocaleDateString()}</small>
           </span>
         </div>
-        <Tag value={props.formatSize} severity="warning" style={{ marginLeft: '26px' }} />
+        <Tag value={props.formatSize} severity="warning" style={{ marginLeft: "26px" }} />
         <Button
           type="button"
           icon={<IoClose />}
-          style={{ marginLeft: 'auto' }}
+          style={{ marginLeft: "auto" }}
           className="p-button-outlined p-button-rounded p-button-danger ml-auto"
           onClick={() => onTemplateRemove(file, props.onRemove)}
         />
@@ -137,11 +174,13 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
 
   const emptyTemplate = () => {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-        <div style={{ padding: '30px', borderRadius: '50%', backgroundColor: '#f9fafb' }}>
+      <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+        <div style={{ padding: "30px", borderRadius: "50%", backgroundColor: "#f9fafb" }}>
           <IoImageOutline size={100} color="#d1d5db" />
         </div>
-        <span style={{ fontSize: '1.2em', margin: '30px 0', color: '#6b7280' }}>Перетягніть файл сюди</span>
+        <span style={{ fontSize: "1.2em", margin: "30px 0", color: "#6b7280" }}>
+          Перетягніть файл сюди
+        </span>
       </div>
     )
   }
@@ -149,38 +188,35 @@ const UploadFile: React.FC<IUploadFileProps> = ({ lessonId }) => {
   const chooseOptions = {
     icon: <SelectFilesIcon />,
     iconOnly: true,
-    className: 'custom-choose-btn p-button-rounded p-button-outlined',
+    className: "custom-choose-btn p-button-rounded p-button-outlined",
   }
   const uploadOptions = {
     icon: <AiOutlineCloudUpload />,
     iconOnly: true,
-    className: 'custom-upload-btn p-button-success p-button-rounded p-button-outlined',
+    className: "custom-upload-btn p-button-success p-button-rounded p-button-outlined",
   }
   const cancelOptions = {
     icon: <IoClose />,
     iconOnly: true,
-    className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined',
+    className: "custom-cancel-btn p-button-danger p-button-rounded p-button-outlined",
   }
 
   return (
     <div>
-      <Toast ref={toast}></Toast>
+      {/* <Toast ref={toast}></Toast> */}
 
       <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
       <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
       <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
       <UploadComponent
-        ref={fileUploadRef}
         name="demo[]"
-        // url={`uploads/${lessonId}`}
-        multiple
-        // accept="image/*"
-        maxFileSize={20000000}
+        ref={fileUploadRef}
         customUpload={true}
-        // onUpload={(e) => onTemplateUpload(e)}
+        maxFileSize={5000000}
         uploadHandler={onTemplateUpload}
         onSelect={onTemplateSelect}
+        onBeforeSelect={onBeforeSelect}
         onError={onTemplateClear}
         onClear={onTemplateClear}
         headerTemplate={headerTemplate}
