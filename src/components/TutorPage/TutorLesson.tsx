@@ -1,12 +1,15 @@
 import React from 'react'
 import { Button } from 'primereact/button'
 import { MdEdit as EditIcon } from 'react-icons/md'
+import { MdDeleteOutline as DeleteIcon } from 'react-icons/md'
 import { FaRegBookmark as BookLessonIcon } from 'react-icons/fa'
 
 import Avatar from '../ui/Avatar/Avatar'
+import { ILessonFormFilds } from './LessonModal'
+import { useAppDispatch } from '../../redux/store'
 import { LessonType } from '../../redux/lessons/lessonsType'
 import styles from '../../pages/TutorPage/TutorPage.module.scss'
-import { ILessonFormFilds } from './LessonModal'
+import { deleteLesson } from '../../redux/lessons/lessonsAsyncActions'
 
 interface ITutorLessonProps {
   lesson: LessonType
@@ -15,6 +18,14 @@ interface ITutorLessonProps {
 }
 
 const TutorLesson: React.FC<ITutorLessonProps> = ({ lesson, isOwner, onActionButtonClick }) => {
+  const dispatch = useAppDispatch()
+
+  const onDeleteLesson = () => {
+    if (window.confirm('Ви дійсно хочете видалити урок?')) {
+      dispatch(deleteLesson(lesson.id))
+    }
+  }
+
   return (
     <div className={styles['lessons-wrapper']} key={lesson.id}>
       <Avatar size="small" src={lesson.tutor.avatarUrl} />
@@ -32,19 +43,31 @@ const TutorLesson: React.FC<ITutorLessonProps> = ({ lesson, isOwner, onActionBut
 
         <div className={styles['lesson-col-right']}>
           {isOwner ? (
-            <Button
-              title="Редагувати"
-              onClick={() =>
-                onActionButtonClick({
-                  duration: lesson.duration,
-                  price: lesson.price,
-                  name: lesson.name,
-                  id: lesson.id,
-                })
-              }
-            >
-              <EditIcon size={20} />
-            </Button>
+            <div>
+              <Button
+                title="Редагувати"
+                onClick={() =>
+                  onActionButtonClick({
+                    duration: lesson.duration,
+                    price: lesson.price,
+                    name: lesson.name,
+                    id: lesson.id,
+                  })
+                }
+              >
+                <EditIcon size={20} />
+              </Button>
+
+              <Button
+                style={{ marginLeft: '10px' }}
+                severity="danger"
+                title="Видалити"
+                outlined
+                onClick={onDeleteLesson}
+              >
+                <DeleteIcon size={20} />
+              </Button>
+            </div>
           ) : (
             <Button title="Забронювати урок">
               <BookLessonIcon size={20} />

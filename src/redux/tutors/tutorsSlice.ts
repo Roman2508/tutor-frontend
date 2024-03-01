@@ -4,7 +4,7 @@ import { RootState } from '../store'
 import { LoadingStatusTypes } from '../appTypes'
 import { InitialStateType, ReviewsType, TutorType } from './tutorsTypes'
 import { createReviews, deleteReviews, getTutor } from './tutorsAsyncActions'
-import { createLesson, updateLesson } from '../lessons/lessonsAsyncActions'
+import { createLesson, deleteLesson, updateLesson } from '../lessons/lessonsAsyncActions'
 import { LessonType } from '../lessons/lessonsType'
 
 const lessonsInitialState: InitialStateType = {
@@ -43,6 +43,14 @@ const tutorSlice = createSlice({
         }
         return el
       })
+      state.tutor.lessons = lessons
+      state.loadingStatus = LoadingStatusTypes.SUCCESS
+    })
+
+    /* deleteLesson */
+    builder.addCase(deleteLesson.fulfilled, (state, action: PayloadAction<number>) => {
+      if (!state.tutor) return
+      const lessons = state.tutor.lessons.filter((el) => el.id !== action.payload)
       state.tutor.lessons = lessons
       state.loadingStatus = LoadingStatusTypes.SUCCESS
     })

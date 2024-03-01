@@ -25,6 +25,14 @@ const dialogsSlice = createSlice({
     setLoadingStatus(state, action) {
       state.loadingStatus = action.payload
     },
+    addMessage(state, action: PayloadAction<MessageType>) {
+      if (!state.messages) return
+      const isHasDublicate = state.messages.some((el) => el.id === action.payload.id)
+
+      if (!isHasDublicate) {
+        state.messages.push(action.payload)
+      }
+    },
   },
   extraReducers: (builder) => {
     /* getDialogs */
@@ -84,7 +92,7 @@ const dialogsSlice = createSlice({
   },
 })
 
-export const { setLoadingStatus } = dialogsSlice.actions
+export const { setLoadingStatus, addMessage } = dialogsSlice.actions
 
 export default dialogsSlice.reducer
 

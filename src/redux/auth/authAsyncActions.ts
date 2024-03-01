@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { AuthLoginType, AuthMeType, AuthRegisterType, UpdateStudentType, UpdateTutorType } from '../../api/apiTypes'
-import { setLoadingStatus } from '../lessons/lessonsSlice'
-import { LoadingStatusTypes } from '../appTypes'
+
 import { authAPI } from '../../api/api'
+import { LoadingStatusTypes } from '../appTypes'
 import { setAppAlert } from '../appStatus/appStatusSlice'
-import { AuthType } from './authTypes'
+import { setLoadingStatus } from '../lessons/lessonsSlice'
+import { AuthLoginType, AuthMeType, AuthRegisterType, UpdateStudentType, UpdateTutorType } from '../../api/apiTypes'
 
 export const authLogin = createAsyncThunk('auth/authLogin', async (payload: AuthLoginType, thunkAPI) => {
   thunkAPI.dispatch(setAppAlert({ message: 'Завантаження', status: 'info' }))
@@ -16,9 +16,9 @@ export const authLogin = createAsyncThunk('auth/authLogin', async (payload: Auth
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     window.localStorage.setItem('tutor-token', data.accessToken)
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -32,9 +32,9 @@ export const authRegister = createAsyncThunk('auth/authRegister', async (payload
     thunkAPI.dispatch(setAppAlert({ message: 'Авторизований', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -48,10 +48,11 @@ export const authMe = createAsyncThunk('auth/authMe', async (payload: AuthMeType
     thunkAPI.dispatch(setAppAlert({ message: 'Авторизований', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
-    console.log(1)
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(
+      setAppAlert({ message: (error as any)?.response?.data?.message || error.message, status: 'error' })
+    )
     throw error
   }
 })
@@ -65,10 +66,9 @@ export const updateTutor = createAsyncThunk('auth/updateTutor', async (payload: 
     thunkAPI.dispatch(setAppAlert({ message: 'Оновлено', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
-    console.log(1)
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -82,10 +82,9 @@ export const updateStudent = createAsyncThunk('auth/updateStudent', async (paylo
     thunkAPI.dispatch(setAppAlert({ message: 'Оновлено', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
-    console.log(1)
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })

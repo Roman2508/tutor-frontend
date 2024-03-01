@@ -1,111 +1,123 @@
-import React from "react"
-import dayjs from "dayjs"
-import cn from "classnames"
-import { io } from "socket.io-client"
-import { Button } from "primereact/button"
-import { InputTextarea } from "primereact/inputtextarea"
+import React from 'react'
+import dayjs from 'dayjs'
+import cn from 'classnames'
+import { io } from 'socket.io-client'
+import { Button } from 'primereact/button'
+import { InputTextarea } from 'primereact/inputtextarea'
 
-import styles from "./MessagesPage.module.scss"
+import styles from './MessagesPage.module.scss'
+import { useAppDispatch } from '../../redux/store'
+import { getMessages } from '../../redux/dialogs/dialogsAsyncActions'
+import LoadingSpinner from '../ui/LoadingSpinner/LoadingSpinner'
+import { useSelector } from 'react-redux'
+import { addMessage, dialogsSelector } from '../../redux/dialogs/dialogsSlice'
 
-const Message = () => {
+interface IMessageProps {
+  openDialogId: number | null
+  user: { id: number; name: string; userRole: 'tutor' | 'student' }
+}
+
+const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
+  const dispatch = useAppDispatch()
+
   const ref = React.useRef<HTMLDivElement>(null)
 
-  const [messages, setMessages] = React.useState<any[]>([])
-  const [text, setText] = React.useState("")
-  const socket = io("http://localhost:7777")
+  const { messages } = useSelector(dialogsSelector)
+
+  const [text, setText] = React.useState('')
+
+  const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:7777')
 
   React.useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connect")
-      fetch("http://localhost:7777/messages/1")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          setMessages(data)
-        })
-        .catch((err) => console.error(err))
+    if (!openDialogId) return
+
+    socket.on('connect', () => {
+      console.log('connect')
+      dispatch(getMessages(openDialogId))
     })
 
     return () => {
       socket.off()
     }
-  }, [])
+  }, [openDialogId])
 
   React.useEffect(() => {
-    if (messages.length) {
+    if (messages && messages.length) {
       ref.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
+        behavior: 'smooth',
+        block: 'end',
       })
     }
-  }, [messages.length])
+  }, [messages])
 
   const message = {
+    dialog: openDialogId,
+    userRole: user.userRole,
     text: text,
-    userRole: "tutor",
-    sender: 1,
-    dialog: 1,
+    sender: { id: user.id, name: user.name },
   }
 
   const sendMessage = (message: any) => {
-    socket.emit("sendMessage", message)
+    socket.emit('sendMessage', message)
+    setText('')
   }
 
-  //Слушаем событие recMessage, чтобы получать сообщения, отправленные пользователями
-  socket.on("recMessage", (message: any) => {
+  // Слушаем событие recMessage, чтобы получать сообщения, отправленные пользователями
+  socket.on('recMessage', (message: any) => {
     // @ts-ignore // fix dublicating messages
-    socket.on("connection", setMessages(messages))
+    socket.on('connection', dispatch(addMessage(message)))
 
-    setMessages((prev) => {
-      console.log(prev, message)
-      return [...prev, message]
-    })
+    // dispatch(addMessage(message))
+
+    // setMessages((prev) => {
+    //   return [...prev, message]
+    // })
   })
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.messages}>
-        {
-          /* Array(10)
-          .fill(null) */
-          messages?.map((message, index) => (
-            <div
-              className={cn(styles["message-wrapper"], {
-                [styles["own-comment"]]:
-                  index === 1 || index === 3 || index === 5 || index === 7 || index === 9,
-              })}
-              key={index}
-            >
+        {messages ? (
+          messages.map((message) => {
+            const sender = message.senderTutor ? message.senderTutor : message.senderStudent
+
+            return (
               <div
-                className={cn(styles.message, {
-                  [styles["own-comment"]]:
-                    index === 1 || index === 3 || index === 5 || index === 7 || index === 9,
+                className={cn(styles['message-wrapper'], {
+                  [styles['own-comment']]: sender.id === user.id && sender.name === user.name,
                 })}
+                key={message.id}
               >
-                <b style={{ fontSize: "14px" }}>{message.sender.name}</b>
-                <br />
-                {message.text}
+                <div
+                  className={cn(styles.message, {
+                    [styles['own-comment']]: sender.id === user.id && sender.name === user.name,
+                  })}
+                >
+                  <b style={{ fontSize: '14px' }}>{sender.name}</b>
+                  <br />
+                  {message.text}
+                </div>
+                <span className={styles['send-at']}>{dayjs(message.sendAt).format('DD.MM.YYYY - hh:mm:ss')}</span>
               </div>
-              <span className={styles["send-at"]}>
-                {dayjs(message.sendAt).format("DD.MM.YYYY - hh:mm:ss")}
-              </span>
-            </div>
-          ))
-        }
+            )
+          })
+        ) : (
+          <LoadingSpinner />
+        )}
 
         <div ref={ref} />
       </div>
 
-      <div className={styles["sent-message"]}>
+      <div className={styles['sent-message']}>
         <InputTextarea
           rows={3}
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           placeholder="Написати повідомлення"
           onChange={(e) => setText(e.target.value)}
           value={text}
           autoResize
         />
-        <div style={{ textAlign: "end" }}>
+        <div style={{ textAlign: 'end' }}>
           <Button onClick={() => sendMessage(message)} disabled={!text}>
             Відправити
           </Button>

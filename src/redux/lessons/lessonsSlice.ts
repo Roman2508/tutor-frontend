@@ -45,14 +45,6 @@ const lessonsSlice = createSlice({
     //   state.lessons = lessons
     //   state.loadingStatus = LoadingStatusTypes.SUCCESS
     // })
-
-    /* deleteLesson */
-    builder.addCase(deleteLesson.fulfilled, (state, action: PayloadAction<number>) => {
-      if (!state.lessons) return
-      const lessons = state.lessons.filter((el) => el.id !== action.payload)
-      state.lessons = lessons
-      state.loadingStatus = LoadingStatusTypes.SUCCESS
-    })
   },
 })
 

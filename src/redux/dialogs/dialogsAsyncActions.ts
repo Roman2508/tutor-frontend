@@ -6,17 +6,15 @@ import { LoadingStatusTypes } from '../appTypes'
 import { dialogsAPI, messagesAPI } from '../../api/api'
 
 export const getDialogs = createAsyncThunk('dialogs/getDialogs', async (payload: GetDialogsType, thunkAPI) => {
-  thunkAPI.dispatch(setAppAlert({ message: 'Завантаження', status: 'info' }))
   thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.LOADING))
 
   try {
     const { data } = await dialogsAPI.getAll(payload)
-    thunkAPI.dispatch(setAppAlert({ message: 'Діалоги завантажені', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -29,9 +27,9 @@ export const createDialog = createAsyncThunk('dialogs/createDialog', async (payl
     const { data } = await dialogsAPI.create(payload)
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -45,9 +43,9 @@ export const deleteDialog = createAsyncThunk('dialogs/deleteDialog', async (payl
     thunkAPI.dispatch(setAppAlert({ message: 'Діалог видалено', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -61,9 +59,9 @@ export const getMessages = createAsyncThunk('dialogs/getMessages', async (id: nu
     const { data } = await messagesAPI.getAll(id)
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -77,9 +75,9 @@ export const createMessage = createAsyncThunk('dialogs/createMessage', async (pa
     thunkAPI.dispatch(setAppAlert({ message: 'Повідомлення надіслано', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -93,9 +91,9 @@ export const updateIsReading = createAsyncThunk('dialogs/updateIsReading', async
     thunkAPI.dispatch(setAppAlert({ message: 'Повідомлення прочитано', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
@@ -109,9 +107,9 @@ export const deleteMessages = createAsyncThunk('dialogs/deleteMessages', async (
     thunkAPI.dispatch(setAppAlert({ message: 'Повідомлення видалено', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
-  } catch (error) {
+  } catch (error: any) {
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.ERROR))
-    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message, status: 'error' }))
+    thunkAPI.dispatch(setAppAlert({ message: (error as any).response.data.message || error.message, status: 'error' }))
     throw error
   }
 })
