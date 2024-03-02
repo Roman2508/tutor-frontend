@@ -9,9 +9,11 @@ import { useParams } from "react-router-dom"
 
 import styles from "./FullLessonPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
+import Error from "../../components/ui/Error/Error"
 import File from "../../components/LessonsPage/File"
 import EmptyImage from "/src/assets/empty-image.png"
 import Avatar from "../../components/ui/Avatar/Avatar"
+import { LoadingStatusTypes } from "../../redux/appTypes"
 import { authSelector } from "../../redux/auth/authSlice"
 import UploadFile from "../../components/LessonsPage/UploadFile"
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
@@ -24,8 +26,9 @@ const FullLessonPage = () => {
 
   const dispatch = useAppDispatch()
 
-  const { auth } = useSelector(authSelector)
-  const { fullLesson } = useSelector(reservedLessonsSelector)
+  const { auth, loadingStatus: authLoadingStatus } = useSelector(authSelector)
+  const { fullLesson, loadingStatus: fullLessonLoadingStatus } =
+    useSelector(reservedLessonsSelector)
 
   const [totalFilesCount, setTotalFilesCount] = React.useState({
     tutor: 0,
@@ -62,6 +65,13 @@ const FullLessonPage = () => {
     fetchData()
   }, [])
 
+  if (
+    fullLessonLoadingStatus === LoadingStatusTypes.ERROR ||
+    authLoadingStatus === LoadingStatusTypes.ERROR
+  ) {
+    return <Error />
+  }
+
   if (!fullLesson || !auth || !params.id) {
     return <LoadingSpinner />
   }
@@ -71,7 +81,11 @@ const FullLessonPage = () => {
       <Card>
         <div className={styles.wrapper}>
           <div className={styles.col}>
-            <Avatar size="large" shape="square" />
+            <Avatar
+              size="large"
+              shape="square"
+              src={fullLesson[auth.userRole === "tutor" ? "student" : "tutor"].avatarUrl}
+            />
           </div>
 
           <div className={cn(styles.col, styles["main-content"])}>

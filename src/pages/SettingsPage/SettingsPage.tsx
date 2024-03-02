@@ -6,16 +6,21 @@ import { Button } from "primereact/button"
 import { Message } from "primereact/message"
 import { Password } from "primereact/password"
 import { InputText } from "primereact/inputtext"
-import { FileUpload } from "primereact/fileupload"
+import { FileUpload, FileUploadHandlerEvent, FileUploadUploadEvent } from "primereact/fileupload"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 
 import styles from "./SettingsPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
 import Avatar from "../../components/ui/Avatar/Avatar"
 import { InputTextarea } from "primereact/inputtextarea"
-import { authSelector } from "../../redux/auth/authSlice"
+import { authSelector, logout } from "../../redux/auth/authSlice"
 import { emailPattern } from "../../components/AuthPage/emailPattern"
-import { updateStudent, updateTutor } from "../../redux/auth/authAsyncActions"
+import { updateStudent, updateTutor, uploadAvatar } from "../../redux/auth/authAsyncActions"
+import { LoadingStatusTypes } from "../../redux/appTypes"
+import Error from "../../components/ui/Error/Error"
+import { transliterateCyrillicToLatin } from "../../helpers/transliterateCyrillicToLatin"
+import { filesAPI } from "../../api/api"
+import { useNavigate } from "react-router-dom"
 
 interface IFormFilds {
   name: string
@@ -25,15 +30,20 @@ interface IFormFilds {
 }
 
 const SettingsPage = () => {
-  const toast = React.useRef(null)
-
   const dispatch = useAppDispatch()
 
-  const { auth } = useSelector(authSelector)
+  const navigate = useNavigate()
 
-  const onUpload = () => {
-    // @ts-ignore
-    toast?.current?.show({ severity: "info", summary: "Success", detail: "File Uploaded" })
+  const { auth, loadingStatus } = useSelector(authSelector)
+
+  const onUpload = async (event: FileUploadHandlerEvent) => {
+    const file = event.files[0]
+    const _file = new File([file], transliterateCyrillicToLatin(file.name), { type: file.type })
+
+    const formData = new FormData()
+    formData.append("file", _file)
+
+    await dispatch(uploadAvatar(formData))
   }
 
   const {
@@ -57,6 +67,13 @@ const SettingsPage = () => {
     }
   }
 
+  const onLogout = () => {
+    if (window.confirm("Ви дійсно хочете вийти з акаунта?")) {
+      dispatch(logout())
+      navigate("/auth")
+    }
+  }
+
   React.useEffect(() => {
     if (!auth) return
 
@@ -64,6 +81,10 @@ const SettingsPage = () => {
     setValue("email", auth.email)
     setValue("description", auth.description)
   }, [auth])
+
+  if (loadingStatus === LoadingStatusTypes.ERROR) {
+    return <Error />
+  }
 
   if (!auth) return
 
@@ -85,12 +106,14 @@ const SettingsPage = () => {
             <FileUpload
               mode="basic"
               name="demo[]"
-              url="/api/upload"
+              // url="/api/upload"
+              customUpload={true}
+              uploadHandler={onUpload}
               accept="image/*"
+              // onUpload={onUpload}
+              maxFileSize={2000000}
               style={{ marginTop: "10px" }}
               chooseLabel="Завантажити інше фото"
-              maxFileSize={2000000}
-              onUpload={onUpload}
             />
           </div>
         </div>
@@ -221,6 +244,15 @@ const SettingsPage = () => {
           )}
 
           <Button label="Зберегти зміни" type="submit" style={{ marginTop: "20px" }} />
+
+          <Button
+            outlined
+            type="button"
+            severity="danger"
+            onClick={onLogout}
+            label="Вийти з акаунта"
+            style={{ marginTop: "20px" }}
+          />
         </form>
       </Card>
     </div>

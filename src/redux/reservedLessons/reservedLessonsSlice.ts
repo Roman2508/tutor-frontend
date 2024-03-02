@@ -76,7 +76,7 @@ const reservedLessonsSlice = createSlice({
     /* deleteReservedLesson */
     builder.addCase(deleteReservedLesson.fulfilled, (state, action: PayloadAction<number>) => {
       if (!state.reservedLessons) return
-      const reservedLessons = state.reservedLessons.filter((el) => el.id === action.payload)
+      const reservedLessons = state.reservedLessons.filter((el) => el.id !== action.payload)
       state.reservedLessons = reservedLessons
       state.loadingStatus = LoadingStatusTypes.SUCCESS
     })

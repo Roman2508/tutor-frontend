@@ -18,12 +18,15 @@ import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsT
 import { reservedLessonsSelector } from "../../redux/reservedLessons/reservedLessonsSlice"
 import { getReservedLessons } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
 import { authSelector } from "../../redux/auth/authSlice"
+import { LoadingStatusTypes } from "../../redux/appTypes"
+import Error from "../../components/ui/Error/Error"
 
 const CalendarPage = () => {
   const dispatch = useAppDispatch()
 
-  const { auth } = useSelector(authSelector)
-  const { reservedLessons } = useSelector(reservedLessonsSelector)
+  const { auth, loadingStatus: authLoadingStatus } = useSelector(authSelector)
+  const { reservedLessons, loadingStatus: reservedLessonsLoadingStatus } =
+    useSelector(reservedLessonsSelector)
 
   const [events, setEvents] = React.useState<Event[]>([])
   const [selectedEvent, setSelectedEvent] = React.useState<ReservedLessonType | null>(null)
@@ -40,11 +43,13 @@ const CalendarPage = () => {
   }
 
   React.useEffect(() => {
-    if (!events) return
+    if (!auth) return
 
     const fetchData = async () => {
       const { student, tutor, ...rest } = filterInititalState
-      const { payload } = await dispatch(getReservedLessons({ ...rest, pageSize: 1000 }))
+      const { payload } = await dispatch(
+        getReservedLessons({ ...rest, [auth.userRole]: auth.id, pageSize: 1000 })
+      )
       const events = (payload as GetResevedLessonsResponceType).entities.map(
         (el: ReservedLessonType) => {
           return {
@@ -60,6 +65,13 @@ const CalendarPage = () => {
 
     fetchData()
   }, [])
+
+  if (
+    reservedLessonsLoadingStatus === LoadingStatusTypes.ERROR ||
+    authLoadingStatus === LoadingStatusTypes.ERROR
+  ) {
+    return <Error />
+  }
 
   if (!auth) {
     return <LoadingSpinner />
@@ -81,8 +93,14 @@ const CalendarPage = () => {
         {selectedEvent ? (
           <div className={styles.wrapper}>
             <div className={styles.top}>
-              <Avatar size="small" shape="square" src={selectedEvent[auth.userRole].avatarUrl} />
-              <h4 className={styles["user-name"]}>{selectedEvent[auth.userRole].name}</h4>
+              <Avatar
+                size="small"
+                shape="square"
+                src={selectedEvent[auth.userRole === "tutor" ? "student" : "tutor"].avatarUrl}
+              />
+              <h4 className={styles["user-name"]}>
+                {selectedEvent[auth.userRole === "tutor" ? "student" : "tutor"].name}
+              </h4>
             </div>
 
             <div className={cn(styles["main-content"])}>

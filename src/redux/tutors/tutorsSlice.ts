@@ -1,11 +1,11 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-import { RootState } from '../store'
-import { LoadingStatusTypes } from '../appTypes'
-import { InitialStateType, ReviewsType, TutorType } from './tutorsTypes'
-import { createReviews, deleteReviews, getTutor } from './tutorsAsyncActions'
-import { createLesson, deleteLesson, updateLesson } from '../lessons/lessonsAsyncActions'
-import { LessonType } from '../lessons/lessonsType'
+import { RootState } from "../store"
+import { LoadingStatusTypes } from "../appTypes"
+import { InitialStateType, ReviewsType, TutorType } from "./tutorsTypes"
+import { createReviews, deleteReviews, getTutor } from "./tutorsAsyncActions"
+import { createLesson, deleteLesson, updateLesson } from "../lessons/lessonsAsyncActions"
+import { LessonType } from "../lessons/lessonsType"
 
 const lessonsInitialState: InitialStateType = {
   tutor: null,
@@ -13,11 +13,14 @@ const lessonsInitialState: InitialStateType = {
 }
 
 const tutorSlice = createSlice({
-  name: 'lessons',
+  name: "lessons",
   initialState: lessonsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
       state.loadingStatus = action.payload
+    },
+    clearTutor(state) {
+      state.tutor = null
     },
   },
   extraReducers: (builder) => {
@@ -73,7 +76,7 @@ const tutorSlice = createSlice({
   },
 })
 
-export const { setLoadingStatus } = tutorSlice.actions
+export const { setLoadingStatus, clearTutor } = tutorSlice.actions
 
 export default tutorSlice.reducer
 

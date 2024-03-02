@@ -1,19 +1,19 @@
-import { AuthType } from '../redux/auth/authTypes'
-import { LessonType } from '../redux/lessons/lessonsType'
-import { ReservedLessonType } from '../redux/reservedLessons/reservedLessonsTypes'
+import { AuthType } from "../redux/auth/authTypes"
+import { LessonType } from "../redux/lessons/lessonsType"
+import { ReservedLessonType } from "../redux/reservedLessons/reservedLessonsTypes"
 
 /* auth */
 export type AuthLoginType = {
   email: string
   password: string
-  userRole: 'tutor' | 'student'
+  userRole: "tutor" | "student"
 }
 
 export type AuthRegisterType = {
   email: string
   password: string
   name: string
-  userRole: 'tutor' | 'student'
+  userRole: "tutor" | "student"
 }
 
 export type AuthMeType = {
@@ -41,7 +41,7 @@ export type LessonsFilterType = {
   name: string
   tutorName: string
   price: [number, number]
-  sortBy: 'price-desc' | 'price-asc' | 'reviews-desc' | 'rating-desc'
+  sortBy: "price-desc" | "price-asc" | "reviews-desc" | "rating-desc"
   currentPage: number
   pageSize: number
 }
@@ -71,7 +71,7 @@ export type GetLessonsResponce = {
 /* // lessons */
 
 /* dialogs */
-export type GetDialogsType = { id: number; userRole: 'tutor' | 'student' }
+export type GetDialogsType = { id: number; userRole: "tutor" | "student" }
 export type DeleteDialogType = GetDialogsType
 export type CreateDialogType = { tutor: number; student: number }
 /* // dialogs */
@@ -90,7 +90,7 @@ export type ReservedLessonsFilterType = {
   name: string
   student?: number
   tutor?: number
-  sortBy: 'price-desc' | 'price-asc' | 'reviews-desc' | 'rating-desc'
+  sortBy: "price-desc" | "price-asc" | "startAt-desc" | "startAt-asc"
   currentPage: number
   pageSize: number
 }
@@ -99,7 +99,7 @@ export type CreateReservedLessonsType = {
   name: string
   theme: string
   price: number
-  status: 'planned'
+  status: "planned"
   duration: number
   startAt: Date
   tutor: number
@@ -110,7 +110,7 @@ export type UpdateReservedLessonsType = {
   id: number
   theme: string
   price: number
-  status: 'planned' | 'conducted'
+  status: "planned" | "conducted"
   duration: number
   meetUrl: string
 }
@@ -120,6 +120,15 @@ export type GetResevedLessonsResponceType = {
   totalCount: number
   page: number
   size: number
+}
+
+export type PaymentBodyType = { amount: number; description: string }
+export type PaymentResponseType = {
+  response: {
+    checkout_url: string
+    payment_id: string
+    response_status: "success" | "failure"
+  }
 }
 /* // reservedLessons */
 

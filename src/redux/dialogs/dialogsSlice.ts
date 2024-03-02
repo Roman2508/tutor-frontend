@@ -1,7 +1,7 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { LoadingStatusTypes } from '../appTypes'
-import { DialogType, InitialStateType, MessageType } from './dialogsTypes'
-import { RootState } from '../store'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { LoadingStatusTypes } from "../appTypes"
+import { DialogType, InitialStateType, MessageType } from "./dialogsTypes"
+import { RootState } from "../store"
 import {
   createDialog,
   createMessage,
@@ -10,7 +10,7 @@ import {
   getDialogs,
   getMessages,
   updateIsReading,
-} from './dialogsAsyncActions'
+} from "./dialogsAsyncActions"
 
 const dialogsInitialState: InitialStateType = {
   dialogs: null,
@@ -19,12 +19,13 @@ const dialogsInitialState: InitialStateType = {
 }
 
 const dialogsSlice = createSlice({
-  name: 'dialogs',
+  name: "dialogs",
   initialState: dialogsInitialState,
   reducers: {
     setLoadingStatus(state, action) {
       state.loadingStatus = action.payload
     },
+
     addMessage(state, action: PayloadAction<MessageType>) {
       if (!state.messages) return
       const isHasDublicate = state.messages.some((el) => el.id === action.payload.id)
@@ -32,6 +33,10 @@ const dialogsSlice = createSlice({
       if (!isHasDublicate) {
         state.messages.push(action.payload)
       }
+    },
+
+    clearMessages(state) {
+      state.messages = null
     },
   },
   extraReducers: (builder) => {
@@ -92,7 +97,7 @@ const dialogsSlice = createSlice({
   },
 })
 
-export const { setLoadingStatus, addMessage } = dialogsSlice.actions
+export const { setLoadingStatus, addMessage, clearMessages } = dialogsSlice.actions
 
 export default dialogsSlice.reducer
 

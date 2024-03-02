@@ -10,16 +10,26 @@ interface IAvatarProps {
   shape?: "circle" | "square"
   sx?: CSSProperties
   src?: string
+  classNames?: string
 }
 
-const Avatar: React.FC<IAvatarProps> = ({ size = "small", shape = "square", src = "", sx = {} }) => {
+const Avatar: React.FC<IAvatarProps> = ({
+  size = "small",
+  shape = "square",
+  src = "",
+  sx = {},
+  classNames = "",
+}) => {
   return (
-    <AvatarComponent
-      shape={shape}
-      image={src}
-      icon={<UserIcon size={size === "small" ? 30 : 50} color="#fff" />}
-      className={cn(styles.avatar, styles[size])}
-    />
+    <>
+      <AvatarComponent
+        style={sx}
+        shape={shape}
+        image={`${import.meta.env.VITE_API_URL}/uploads/${src}`}
+        icon={<UserIcon size={size === "small" ? 30 : 50} color="#fff" />}
+        className={cn(styles.avatar, styles[size], classNames)}
+      />
+    </>
   )
 }
 

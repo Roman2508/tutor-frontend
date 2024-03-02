@@ -4,25 +4,25 @@ import { Dropdown } from "primereact/dropdown"
 import { RadioButton } from "primereact/radiobutton"
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 
+import {
+  IReservedLessonsFilterState,
+  filterInititalState,
+} from "../../pages/ReservedLessonsPage/ReservedLessonsPage"
 import styles from "./LessonsPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
 import { AuthType } from "../../redux/auth/authTypes"
+import { LoadingStatusTypes } from "../../redux/appTypes"
 import LoadingSpinner from "../ui/LoadingSpinner/LoadingSpinner"
 import { GetResevedLessonsResponceType } from "../../api/apiTypes"
 import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
 import { getReservedLessons } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
 import AutoCompleteLessons, { ISelectItems } from "../ui/AutoCompleteLessons/AutoCompleteLessons"
-import {
-  IReservedLessonsFilterState,
-  filterInititalState,
-} from "../../pages/ReservedLessonsPage/ReservedLessonsPage"
-import { LoadingStatusTypes } from "../../redux/appTypes"
 
 const sortTypes = [
+  { name: "За датою проведення  (від нових до старих)", value: "startAt-desc" },
+  { name: "За датою проведення (від старих до нових)", value: "startAt-asc" },
   { name: "За зменшенням ціни", value: "price-desc" },
   { name: "За зростанням ціни", value: "price-asc" },
-  { name: "За кількістю відгуків", value: "reviews-desc" },
-  { name: "За найвищим рейтингом", value: "rating-desc" },
 ]
 
 interface ILessonsFilterProps {
@@ -55,23 +55,24 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
   }
 
   const findLessons = async () => {
+    if (!auth) return
+
     const { student, tutor, ...rest } = filter
 
-    if (student.value) {
+    if (student.value > 0) {
       const { payload } = await dispatch(getReservedLessons({ ...rest, student: student.value }))
-      // @ts-ignore
       setTotalLessons((payload as GetResevedLessonsResponceType).totalCount)
-    } else if (tutor.value) {
+    } else if (tutor.value > 0) {
       const { payload } = await dispatch(getReservedLessons({ ...rest, tutor: tutor.value }))
       setTotalLessons((payload as GetResevedLessonsResponceType).totalCount)
     } else {
-      const { payload } = await dispatch(getReservedLessons(rest))
+      const { payload } = await dispatch(getReservedLessons({ ...rest, [auth.userRole]: auth.id }))
       setTotalLessons((payload as GetResevedLessonsResponceType).totalCount)
     }
   }
 
   React.useEffect(() => {
-    if (!reservedLessons) return
+    if (reservedLessons && reservedLessons.length) return
     findLessons()
   }, [filter.currentPage])
 
@@ -94,7 +95,7 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
             />
           </div>
 
-          {auth.userRole === "tutor" ? (
+          {/* {auth.userRole === "tutor" ? (
             <div className={styles["filter-item"]}>
               <b>Студенти:</b>
               <AutoCompleteLessons
@@ -120,11 +121,11 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
                 }
               />
             </div>
-          )}
+          )} */}
 
           <div className={styles["radio-group"]}>
             {[
-              { label: "Всі", type: "all" },
+              { label: "Всі", type: "" },
               { label: "Заплановані", type: "planned" },
               { label: "Проведені", type: "conducted" },
             ].map((el) => (
@@ -134,10 +135,7 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
                   value={el.type}
                   inputId={el.type}
                   checked={filter.status === el.type}
-                  onChange={(e) => {
-                    console.log(e)
-                    setFilter((prev) => ({ ...prev, status: e.value }))
-                  }}
+                  onChange={(e) => setFilter((prev) => ({ ...prev, status: e.value }))}
                 />
                 <label htmlFor={el.type} className={styles["radio-label"]}>
                   {el.label}

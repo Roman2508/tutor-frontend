@@ -3,12 +3,15 @@ import dayjs from "dayjs"
 import cn from "classnames"
 import { Card } from "primereact/card"
 import { Link } from "react-router-dom"
+import { MdOutlineDeleteOutline } from "react-icons/md"
 import { RiEdit2Line as EditIcon } from "react-icons/ri"
 
 import Avatar from "../ui/Avatar/Avatar"
 import { Button } from "primereact/button"
 import styles from "./LessonsPage.module.scss"
+import { useAppDispatch } from "../../redux/store"
 import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
+import { deleteReservedLesson } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
 
 interface ILessonCardProps {
   lesson: ReservedLessonType
@@ -23,13 +26,21 @@ const LessonCard: React.FC<ILessonCardProps> = ({
   setVisible,
   setEditableLesson,
 }) => {
+  const dispatch = useAppDispatch()
+
   const user = {
     name: userRole === "tutor" ? lesson.student.name : lesson.tutor.name,
-    avatarUrl: userRole === "tutor" ? lesson.student.avatarUrl : lesson.student.avatarUrl,
+    avatarUrl: userRole === "tutor" ? lesson.student.avatarUrl : lesson.tutor.avatarUrl,
   }
 
   const status = lesson.status === "planned" ? "Заплановано" : "Проведено"
   const date = dayjs(lesson.startAt).add(lesson.duration, "minute").format("DD.MM.YY - hh:mm")
+
+  const onDeleteLesson = () => {
+    if (window.confirm("Ви дійсно хочете видалити урок?")) {
+      dispatch(deleteReservedLesson(lesson.id))
+    }
+  }
 
   return (
     <Card style={{ marginBottom: "20px" }}>
@@ -83,16 +94,31 @@ const LessonCard: React.FC<ILessonCardProps> = ({
                 Посилання на онлайн-урок
               </a>
             )}
-            <Button
-              outlined
-              onClick={() => {
-                setEditableLesson(lesson)
-                setVisible(true)
-              }}
-              title="Прикріпити посилання на онлайн урок"
-            >
-              <EditIcon size={24} />
-            </Button>
+
+            {userRole === "tutor" && (
+              <div>
+                <Button
+                  outlined
+                  onClick={() => {
+                    setEditableLesson(lesson)
+                    setVisible(true)
+                  }}
+                  title="Редагувати"
+                >
+                  <EditIcon size={24} />
+                </Button>
+
+                <Button
+                  outlined
+                  severity="danger"
+                  title="Відмінити урок"
+                  style={{ marginLeft: "10px" }}
+                  onClick={onDeleteLesson}
+                >
+                  <MdOutlineDeleteOutline size={24} />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

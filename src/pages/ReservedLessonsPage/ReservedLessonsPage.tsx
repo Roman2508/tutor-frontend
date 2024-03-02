@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector } from "react-redux"
 
 import { useAppDispatch } from "../../redux/store"
+import Error from "../../components/ui/Error/Error"
 import styles from "./ReservedLessonsPage.module.scss"
 import { authSelector } from "../../redux/auth/authSlice"
 import { LoadingStatusTypes } from "../../redux/appTypes"
@@ -20,27 +21,28 @@ export interface IReservedLessonsFilterState {
   name: string
   pageSize: number
   currentPage: number
-  status: "all" | "planned" | "conducted"
+  status: "" | "planned" | "conducted"
   tutor: { value: number; label: string }
   student: { value: number; label: string }
-  sortBy: "price-desc" | "price-asc" | "reviews-desc" | "rating-desc"
+  sortBy: "price-desc" | "price-asc" | "startAt-desc" | "startAt-asc"
 }
 
 export const filterInititalState: IReservedLessonsFilterState = {
   name: "",
   pageSize: 3,
   currentPage: 1,
-  status: "all",
-  sortBy: "price-desc",
-  tutor: { value: 0, label: "" },
-  student: { value: 0, label: "" },
+  status: "",
+  sortBy: "startAt-desc",
+  tutor: { value: -1, label: "" },
+  student: { value: -1, label: "" },
 }
 
 const ReservedLessonsPage = () => {
   const dispatch = useAppDispatch()
 
-  const { auth } = useSelector(authSelector)
-  const { reservedLessons, loadingStatus } = useSelector(reservedLessonsSelector)
+  const { auth, loadingStatus: authLoadingStatus } = useSelector(authSelector)
+  const { reservedLessons, loadingStatus: reservedLessonsLoadingStatus } =
+    useSelector(reservedLessonsSelector)
 
   const [editableLesson, setEditableLesson] = React.useState<ReservedLessonType | null>(null)
   const [allLessonsSelect, setAllLessonsSelect] = React.useState<ISelectItems[]>([])
@@ -50,7 +52,8 @@ const ReservedLessonsPage = () => {
   const [totalLessons, setTotalLessons] = React.useState(0)
 
   React.useEffect(() => {
-    if (reservedLessons || !auth) return
+    if (reservedLessons && reservedLessons.length) return
+    if (!auth) return
 
     const fetchData = async () => {
       setFilter((prev) => ({ ...prev, [auth.userRole]: auth.id }))
@@ -78,14 +81,27 @@ const ReservedLessonsPage = () => {
     fetchData()
   }, [auth])
 
+  if (
+    reservedLessonsLoadingStatus === LoadingStatusTypes.ERROR ||
+    authLoadingStatus === LoadingStatusTypes.ERROR
+  ) {
+    return <Error />
+  }
+
   return (
     <>
-      <EditReservedLessonPage visible={modalVisible} setVisible={setModalVisible} editableLesson={editableLesson} />
+      <EditReservedLessonPage
+        visible={modalVisible}
+        setVisible={setModalVisible}
+        editableLesson={editableLesson}
+      />
 
       <div className={styles.container}>
         <div className={styles.wrapper}>
           <div className={styles.tutors}>
-            {!reservedLessons || loadingStatus === LoadingStatusTypes.LOADING || !auth ? (
+            {!reservedLessons ||
+            reservedLessonsLoadingStatus === LoadingStatusTypes.LOADING ||
+            !auth ? (
               <LoadingSpinner />
             ) : (
               reservedLessons.map((lesson, index) => (
@@ -105,7 +121,7 @@ const ReservedLessonsPage = () => {
             filter={filter}
             setFilter={setFilter}
             totalLessons={totalLessons}
-            loadingStatus={loadingStatus}
+            loadingStatus={reservedLessonsLoadingStatus}
             allUsersSelect={allUsersSelect}
             reservedLessons={reservedLessons}
             setTotalLessons={setTotalLessons}
