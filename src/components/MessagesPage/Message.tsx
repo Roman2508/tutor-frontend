@@ -1,20 +1,20 @@
-import React from 'react'
-import dayjs from 'dayjs'
-import cn from 'classnames'
-import { io } from 'socket.io-client'
-import { Button } from 'primereact/button'
-import { InputTextarea } from 'primereact/inputtextarea'
+import React from "react"
+import dayjs from "dayjs"
+import cn from "classnames"
+import { io } from "socket.io-client"
+import { Button } from "primereact/button"
+import { InputTextarea } from "primereact/inputtextarea"
 
-import styles from './MessagesPage.module.scss'
-import { useAppDispatch } from '../../redux/store'
-import { getMessages } from '../../redux/dialogs/dialogsAsyncActions'
-import LoadingSpinner from '../ui/LoadingSpinner/LoadingSpinner'
-import { useSelector } from 'react-redux'
-import { addMessage, dialogsSelector } from '../../redux/dialogs/dialogsSlice'
+import styles from "./MessagesPage.module.scss"
+import { useAppDispatch } from "../../redux/store"
+import { getMessages } from "../../redux/dialogs/dialogsAsyncActions"
+import LoadingSpinner from "../ui/LoadingSpinner/LoadingSpinner"
+import { useSelector } from "react-redux"
+import { addMessage, dialogsSelector } from "../../redux/dialogs/dialogsSlice"
 
 interface IMessageProps {
   openDialogId: number | null
-  user: { id: number; name: string; userRole: 'tutor' | 'student' }
+  user: { id: number; name: string; userRole: "tutor" | "student" }
 }
 
 const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
@@ -24,15 +24,15 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
 
   const { messages } = useSelector(dialogsSelector)
 
-  const [text, setText] = React.useState('')
+  const [text, setText] = React.useState("")
 
-  const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:7777')
+  const socket = io(import.meta.env.VITE_API_URL || "http://localhost:7777")
 
   React.useEffect(() => {
     if (!openDialogId) return
 
-    socket.on('connect', () => {
-      console.log('connect')
+    socket.on("connect", () => {
+      console.log("connect")
       dispatch(getMessages(openDialogId))
     })
 
@@ -44,8 +44,8 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
   React.useEffect(() => {
     if (messages && messages.length) {
       ref.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
+        behavior: "smooth",
+        block: "end",
       })
     }
   }, [messages])
@@ -58,15 +58,15 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
   }
 
   const sendMessage = (message: any) => {
-    socket.emit('sendMessage', message)
-    setText('')
+    socket.emit("sendMessage", message)
+    setText("")
   }
 
   // Слушаем событие recMessage, чтобы получать сообщения, отправленные пользователями
-  socket.on('recMessage', (message: any) => {
+  socket.on("recMessage", (message: any) => {
     if (message.dialog.id !== openDialogId) return
     // @ts-ignore
-    socket.on('connection', dispatch(addMessage(message)))
+    socket.on("connection", dispatch(addMessage(message)))
   })
 
   return (
@@ -78,21 +78,23 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
 
             return (
               <div
-                className={cn(styles['message-wrapper'], {
-                  [styles['own-comment']]: sender.id === user.id && sender.name === user.name,
+                className={cn(styles["message-wrapper"], {
+                  [styles["own-comment"]]: sender.id === user.id && sender.name === user.name,
                 })}
                 key={message.id}
               >
                 <div
                   className={cn(styles.message, {
-                    [styles['own-comment']]: sender.id === user.id && sender.name === user.name,
+                    [styles["own-comment"]]: sender.id === user.id && sender.name === user.name,
                   })}
                 >
-                  <b style={{ fontSize: '14px' }}>{sender.name}</b>
+                  <b style={{ fontSize: "14px" }}>{sender.name}</b>
                   <br />
-                  <p style={{ textAlign: 'justify' }}>{message.text}</p>
+                  <p style={{ textAlign: "justify", margin: 0 }}>{message.text}</p>
                 </div>
-                <span className={styles['send-at']}>{dayjs(message.sendAt).format('DD.MM.YYYY - hh:mm:ss')}</span>
+                <span className={styles["send-at"]}>
+                  {dayjs(message.sendAt).format("DD.MM.YYYY - hh:mm:ss")}
+                </span>
               </div>
             )
           })
@@ -103,16 +105,16 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
         <div ref={ref} />
       </div>
 
-      <div className={styles['sent-message']}>
+      <div className={styles["sent-message"]}>
         <InputTextarea
           rows={3}
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           placeholder="Написати повідомлення"
           onChange={(e) => setText(e.target.value)}
           value={text}
           autoResize
         />
-        <div style={{ textAlign: 'end' }}>
+        <div style={{ textAlign: "end" }}>
           <Button onClick={() => sendMessage(message)} disabled={!text}>
             Відправити
           </Button>

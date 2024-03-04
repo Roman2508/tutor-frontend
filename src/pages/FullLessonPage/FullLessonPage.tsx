@@ -46,7 +46,7 @@ const FullLessonPage = () => {
 
       const files = (payload as ReservedLessonType).files
 
-      files.forEach((file) => {
+      files?.forEach((file) => {
         if (file.authorRole === "tutor") {
           tutorFiles.push(file)
         } else {
