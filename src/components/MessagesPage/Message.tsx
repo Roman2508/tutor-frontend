@@ -64,14 +64,9 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
 
   // Слушаем событие recMessage, чтобы получать сообщения, отправленные пользователями
   socket.on('recMessage', (message: any) => {
-    // @ts-ignore // fix dublicating messages
+    if (message.dialog.id !== openDialogId) return
+    // @ts-ignore
     socket.on('connection', dispatch(addMessage(message)))
-
-    // dispatch(addMessage(message))
-
-    // setMessages((prev) => {
-    //   return [...prev, message]
-    // })
   })
 
   return (
@@ -95,7 +90,7 @@ const Message: React.FC<IMessageProps> = ({ openDialogId, user }) => {
                 >
                   <b style={{ fontSize: '14px' }}>{sender.name}</b>
                   <br />
-                  {message.text}
+                  <p style={{ textAlign: 'justify' }}>{message.text}</p>
                 </div>
                 <span className={styles['send-at']}>{dayjs(message.sendAt).format('DD.MM.YYYY - hh:mm:ss')}</span>
               </div>

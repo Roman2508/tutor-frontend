@@ -63,7 +63,7 @@ const FullLessonPage = () => {
     }
 
     fetchData()
-  }, [])
+  }, [params.id])
 
   if (
     fullLessonLoadingStatus === LoadingStatusTypes.ERROR ||

@@ -1,20 +1,20 @@
-import React from "react"
-import { PrimeReactProvider } from "primereact/api"
-import { Route, Routes, useNavigate } from "react-router-dom"
+import React from 'react'
+import { PrimeReactProvider } from 'primereact/api'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 
-import "react-toastify/dist/ReactToastify.css"
-import Layout from "./components/layout/Layout"
-import HomePage from "./pages/HomePage/HomePage"
-import AuthPage from "./pages/AuthPage/AuthPage"
-import TutorPage from "./pages/TutorPage/TutorPage"
-import { useAppDispatch } from "./redux/store"
-import AppAlert from "./components/AppAlert/AppAlert"
-import { authMe } from "./redux/auth/authAsyncActions"
-import CalendarPage from "./pages/CalendarPage/CalendarPage"
-import MessagesPage from "./pages/MessagesPage/MessagesPage"
-import FullLessonPage from "./pages/FullLessonPage/FullLessonPage"
-import SettingsPage from "./pages/SettingsPage/SettingsPage"
-import ReservedLessonsPage from "./pages/ReservedLessonsPage/ReservedLessonsPage"
+import 'react-toastify/dist/ReactToastify.css'
+import Layout from './components/layout/Layout'
+import HomePage from './pages/HomePage/HomePage'
+import AuthPage from './pages/AuthPage/AuthPage'
+import TutorPage from './pages/TutorPage/TutorPage'
+import { useAppDispatch } from './redux/store'
+import AppAlert from './components/AppAlert/AppAlert'
+import { authMe } from './redux/auth/authAsyncActions'
+import CalendarPage from './pages/CalendarPage/CalendarPage'
+import MessagesPage from './pages/MessagesPage/MessagesPage'
+import FullLessonPage from './pages/FullLessonPage/FullLessonPage'
+import SettingsPage from './pages/SettingsPage/SettingsPage'
+import ReservedLessonsPage from './pages/ReservedLessonsPage/ReservedLessonsPage'
 
 const value = {
   ripple: true,
@@ -25,12 +25,12 @@ const App = () => {
   const navigate = useNavigate()
 
   React.useEffect(() => {
-    const token = window.localStorage.getItem("tutor-token")
+    const token = window.localStorage.getItem('tutor-token')
 
     if (token) {
       dispatch(authMe({ token }))
     } else {
-      navigate("/auth")
+      navigate('/auth')
     }
   }, [])
 
@@ -60,5 +60,6 @@ const App = () => {
 
 export default App
 
+// backend delete all comments
+// pagination page limit 3 => 10
 // fix lessons filter
-// Якщо діалог вже створений - заборонити створювати новий

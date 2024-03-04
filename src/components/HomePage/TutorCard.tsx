@@ -1,18 +1,20 @@
-import React from "react"
-import { Card } from "primereact/card"
-import { useSelector } from "react-redux"
-import { Button } from "primereact/button"
-import { Rating } from "primereact/rating"
-import { Link, useNavigate } from "react-router-dom"
+import React from 'react'
+import { Card } from 'primereact/card'
+import { useSelector } from 'react-redux'
+import { Button } from 'primereact/button'
+import { Rating } from 'primereact/rating'
+import { Link, useNavigate } from 'react-router-dom'
 
-import Avatar from "../ui/Avatar/Avatar"
-import styles from "./HomePage.module.scss"
-import { useAppDispatch } from "../../redux/store"
-import { authSelector } from "../../redux/auth/authSlice"
-import { LessonType } from "../../redux/lessons/lessonsType"
-import { DialogType } from "../../redux/dialogs/dialogsTypes"
-import LoadingSpinner from "../ui/LoadingSpinner/LoadingSpinner"
-import { createDialog } from "../../redux/dialogs/dialogsAsyncActions"
+import Avatar from '../ui/Avatar/Avatar'
+import styles from './HomePage.module.scss'
+import { useAppDispatch } from '../../redux/store'
+import { authSelector } from '../../redux/auth/authSlice'
+import { LessonType } from '../../redux/lessons/lessonsType'
+import { DialogType } from '../../redux/dialogs/dialogsTypes'
+import LoadingSpinner from '../ui/LoadingSpinner/LoadingSpinner'
+import { createDialog } from '../../redux/dialogs/dialogsAsyncActions'
+import { dialogsAPI } from '../../api/api'
+import { toast } from 'react-toastify'
 
 interface ITutorCardProps {
   lesson: LessonType
@@ -31,13 +33,21 @@ const TutorCard: React.FC<ITutorCardProps> = ({ lesson, setModalVisible, setSele
     return <LoadingSpinner />
   }
 
-  const isShowedActionButtons = auth.userRole !== "tutor"
+  const isShowedActionButtons = auth.userRole !== 'tutor'
 
   const onCreateDialog = async () => {
     try {
+      const { data } = await dialogsAPI.checkIsExist({ tutor: lesson.tutor.id, student: auth.id })
+
+      if (data) {
+        navigate(`/messages/${data.id}`)
+        return
+      }
+
       const { payload } = await dispatch(createDialog({ tutor: lesson.tutor.id, student: auth.id }))
       navigate(`/messages/${(payload as DialogType).id}`)
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.messages || 'Помилка')
       console.error(error)
     }
   }
@@ -49,16 +59,16 @@ const TutorCard: React.FC<ITutorCardProps> = ({ lesson, setModalVisible, setSele
 
   return (
     <Card className={styles.tutor}>
-      <div className={styles["tutor-inner"]}>
+      <div className={styles['tutor-inner']}>
         <Link to={`/tutor/${lesson.tutor.id}`}>
-          <Avatar size="large" sx={{ marginRight: "16px" }} src={lesson.tutor.avatarUrl} />
+          <Avatar size="large" sx={{ marginRight: '16px' }} src={lesson.tutor.avatarUrl} />
         </Link>
 
-        <div className={styles["tutor-info"]}>
-          <div className={styles["tutor-info-top"]}>
-            <Link to={`/tutor/${lesson.tutor.id}`} style={{ textDecoration: "none" }}>
-              <h4 className={styles["lesson-name"]}>{lesson.name}</h4>
-              <h5 className={styles["tutor-name"]}>{lesson.tutor.name}</h5>
+        <div className={styles['tutor-info']}>
+          <div className={styles['tutor-info-top']}>
+            <Link to={`/tutor/${lesson.tutor.id}`} style={{ textDecoration: 'none' }}>
+              <h4 className={styles['lesson-name']}>{lesson.name}</h4>
+              <h5 className={styles['tutor-name']}>{lesson.tutor.name}</h5>
             </Link>
           </div>
 
@@ -74,41 +84,33 @@ const TutorCard: React.FC<ITutorCardProps> = ({ lesson, setModalVisible, setSele
 
           <p>Викладає дисципліни: {lesson.tutor.lessons.map((el) => `${el.name}, `)}</p>
 
-          <p className={styles["tutor-info-desc"]}>{lesson.tutor.description}</p>
+          <p className={styles['tutor-info-desc']}>{lesson.tutor.description}</p>
 
-          <Link className={styles["tutor-link"]} to={`/tutor/${lesson.tutor.id}`}>
+          <Link className={styles['tutor-link']} to={`/tutor/${lesson.tutor.id}`}>
             Докладніше
           </Link>
         </div>
 
-        <div className={styles["tutor-actions"]}>
-          <b className={styles["lesson-rating"]}>Рейтинг:</b>
-          <Rating
-            style={{ justifyContent: "center" }}
-            value={lesson.tutor.rating}
-            cancel={false}
-            stars={5}
-            readOnly
-          />
-          <b style={{ display: "block", marginTop: "5px" }}>
-            {lesson.tutor.reviews?.length} відгуків
-          </b>
+        <div className={styles['tutor-actions']}>
+          <b className={styles['lesson-rating']}>Рейтинг:</b>
+          <Rating style={{ justifyContent: 'center' }} value={lesson.tutor.rating} cancel={false} stars={5} readOnly />
+          <b style={{ display: 'block', marginTop: '5px' }}>{lesson.tutor.reviews?.length} відгуків</b>
 
-          <b className={styles["lesson-price-title"]}>{lesson.price}</b>
-          <p className={styles["lesson-price-desc"]}>грн/{lesson.duration} хв. урок</p>
+          <b className={styles['lesson-price-title']}>{lesson.price}</b>
+          <p className={styles['lesson-price-desc']}>грн/{lesson.duration} хв. урок</p>
 
           {isShowedActionButtons && (
             <>
               <Button
-                className={styles["tutor-action-button"]}
+                className={styles['tutor-action-button']}
                 label="Забронювати урок"
                 onClick={onBookLessons}
                 size="small"
               />
               <Button
-                className={styles["tutor-action-button"]}
+                className={styles['tutor-action-button']}
                 label="Надіслати повідомлення"
-                style={{ marginTop: "0.5em" }}
+                style={{ marginTop: '0.5em' }}
                 onClick={onCreateDialog}
                 severity="secondary"
                 size="small"

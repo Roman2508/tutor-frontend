@@ -1,13 +1,13 @@
 import React from 'react'
-import dayjs from 'dayjs'
 import { Rating } from 'primereact/rating'
 import { Button } from 'primereact/button'
 import { MdOutlineDelete as DeleteIcon } from 'react-icons/md'
 
 import Avatar from '../ui/Avatar/Avatar'
 import styles from './TutorPage.module.scss'
-import { ReviewsType } from '../../redux/tutors/tutorsTypes'
 import { useAppDispatch } from '../../redux/store'
+import { customDayjs } from '../Calendar/Calendar'
+import { ReviewsType } from '../../redux/tutors/tutorsTypes'
 import { deleteReviews } from '../../redux/tutors/tutorsAsyncActions'
 
 interface ITutorReviewsProps {
@@ -18,7 +18,7 @@ interface ITutorReviewsProps {
 const TutorReviews: React.FC<ITutorReviewsProps> = ({ reviews, user }) => {
   const dispatch = useAppDispatch()
 
-  const sendedDate = dayjs(reviews.createdAt).format('HH:MM:ss - MMMM DD, YYYY')
+  const sendedDate = customDayjs(reviews.createdAt).format('HH:MM:ss - MMMM DD, YYYY')
 
   const isShowEditButton = user.id === reviews.sender.id && user.userRole === reviews.sender.userRole
 

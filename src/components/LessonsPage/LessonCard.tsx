@@ -1,85 +1,77 @@
-import React from "react"
-import dayjs from "dayjs"
-import cn from "classnames"
-import { Card } from "primereact/card"
-import { Link } from "react-router-dom"
-import { MdOutlineDeleteOutline } from "react-icons/md"
-import { RiEdit2Line as EditIcon } from "react-icons/ri"
+import React from 'react'
+import dayjs from 'dayjs'
+import cn from 'classnames'
+import { Card } from 'primereact/card'
+import { Link } from 'react-router-dom'
+import { MdOutlineDeleteOutline } from 'react-icons/md'
+import { RiEdit2Line as EditIcon } from 'react-icons/ri'
 
-import Avatar from "../ui/Avatar/Avatar"
-import { Button } from "primereact/button"
-import styles from "./LessonsPage.module.scss"
-import { useAppDispatch } from "../../redux/store"
-import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
-import { deleteReservedLesson } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
+import Avatar from '../ui/Avatar/Avatar'
+import { Button } from 'primereact/button'
+import styles from './LessonsPage.module.scss'
+import { useAppDispatch } from '../../redux/store'
+import { ReservedLessonType } from '../../redux/reservedLessons/reservedLessonsTypes'
+import { deleteReservedLesson } from '../../redux/reservedLessons/reservedLessonsAsyncActions'
+import { customDayjs } from '../Calendar/Calendar'
 
 interface ILessonCardProps {
   lesson: ReservedLessonType
-  userRole: "tutor" | "student"
+  userRole: 'tutor' | 'student'
   setVisible: React.Dispatch<React.SetStateAction<boolean>>
   setEditableLesson: React.Dispatch<React.SetStateAction<ReservedLessonType | null>>
 }
 
-const LessonCard: React.FC<ILessonCardProps> = ({
-  lesson,
-  userRole,
-  setVisible,
-  setEditableLesson,
-}) => {
+const LessonCard: React.FC<ILessonCardProps> = ({ lesson, userRole, setVisible, setEditableLesson }) => {
   const dispatch = useAppDispatch()
 
   const user = {
-    name: userRole === "tutor" ? lesson.student.name : lesson.tutor.name,
-    avatarUrl: userRole === "tutor" ? lesson.student.avatarUrl : lesson.tutor.avatarUrl,
+    name: userRole === 'tutor' ? lesson.student.name : lesson.tutor.name,
+    avatarUrl: userRole === 'tutor' ? lesson.student.avatarUrl : lesson.tutor.avatarUrl,
   }
 
-  const status = lesson.status === "planned" ? "Заплановано" : "Проведено"
-  const date = dayjs(lesson.startAt).add(lesson.duration, "minute").format("DD.MM.YY - hh:mm")
+  const status = lesson.status === 'planned' ? 'Заплановано' : 'Проведено'
+  const date = customDayjs(lesson.startAt).add(lesson.duration, 'minute').format('DD.MM.YY - HH:mm')
 
   const onDeleteLesson = () => {
-    if (window.confirm("Ви дійсно хочете видалити урок?")) {
+    if (window.confirm('Ви дійсно хочете видалити урок?')) {
       dispatch(deleteReservedLesson(lesson.id))
     }
   }
 
   return (
-    <Card style={{ marginBottom: "20px" }}>
+    <Card style={{ marginBottom: '20px' }}>
       <div className={styles.wrapper}>
-        <Link
-          to={`/lesson/${lesson.id}`}
-          className={styles["left-col"]}
-          style={{ textDecoration: "none" }}
-        >
+        <Link to={`/lesson/${lesson.id}`} className={styles['left-col']} style={{ textDecoration: 'none' }}>
           <Avatar size="large" shape="square" src={user.avatarUrl} />
         </Link>
 
         <Link
           to={`/lesson/${lesson.id}`}
-          style={{ textDecoration: "none" }}
-          className={cn(styles.col, styles["main-content"])}
+          style={{ textDecoration: 'none' }}
+          className={cn(styles.col, styles['main-content'])}
         >
-          <h4 className={styles["user-name"]}>{user.name}</h4>
+          <h4 className={styles['user-name']}>{user.name}</h4>
 
-          <p className={styles["lesson-name"]}>{lesson.name}</p>
-          {lesson.theme && <p className={styles["lesson-theme"]}>{lesson.theme}</p>}
+          <p className={styles['lesson-name']}>{lesson.name}</p>
+          {lesson.theme && <p className={styles['lesson-theme']}>{lesson.theme}</p>}
         </Link>
 
         <div
           style={{
-            display: "flex",
-            justifyContent: "end",
-            flexDirection: "column",
-            alignItems: "flex-end",
+            display: 'flex',
+            justifyContent: 'end',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
           }}
         >
-          <div className={styles["right-col"]}>
+          <div className={styles['right-col']}>
             <div>
               <p className={styles.price}>{lesson.price} грн.</p>
               <p className={styles.duration}>{lesson.duration} хв. урок </p>
             </div>
 
-            <div style={{ marginLeft: "30px" }}>
-              <div className={styles["status-wrapper"]}>
+            <div style={{ marginLeft: '30px' }}>
+              <div className={styles['status-wrapper']}>
                 <div className={cn(styles.badge, styles[lesson.status])}></div>
                 <p className={styles.status}>{status}</p>
               </div>
@@ -88,14 +80,14 @@ const LessonCard: React.FC<ILessonCardProps> = ({
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             {lesson.meetUrl && (
               <a href={lesson.meetUrl} className={styles.link} target="_blank">
                 Посилання на онлайн-урок
               </a>
             )}
 
-            {userRole === "tutor" && (
+            {userRole === 'tutor' && (
               <div>
                 <Button
                   outlined
@@ -112,7 +104,7 @@ const LessonCard: React.FC<ILessonCardProps> = ({
                   outlined
                   severity="danger"
                   title="Відмінити урок"
-                  style={{ marginLeft: "10px" }}
+                  style={{ marginLeft: '10px' }}
                   onClick={onDeleteLesson}
                 >
                   <MdOutlineDeleteOutline size={24} />

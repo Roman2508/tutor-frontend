@@ -1,28 +1,25 @@
-import React from "react"
-import { Button } from "primereact/button"
-import { Dropdown } from "primereact/dropdown"
-import { RadioButton } from "primereact/radiobutton"
-import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
+import React from 'react'
+import { Button } from 'primereact/button'
+import { Dropdown } from 'primereact/dropdown'
+import { RadioButton } from 'primereact/radiobutton'
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator'
 
-import {
-  IReservedLessonsFilterState,
-  filterInititalState,
-} from "../../pages/ReservedLessonsPage/ReservedLessonsPage"
-import styles from "./LessonsPage.module.scss"
-import { useAppDispatch } from "../../redux/store"
-import { AuthType } from "../../redux/auth/authTypes"
-import { LoadingStatusTypes } from "../../redux/appTypes"
-import LoadingSpinner from "../ui/LoadingSpinner/LoadingSpinner"
-import { GetResevedLessonsResponceType } from "../../api/apiTypes"
-import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
-import { getReservedLessons } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
-import AutoCompleteLessons, { ISelectItems } from "../ui/AutoCompleteLessons/AutoCompleteLessons"
+import { IReservedLessonsFilterState, filterInititalState } from '../../pages/ReservedLessonsPage/ReservedLessonsPage'
+import styles from './LessonsPage.module.scss'
+import { useAppDispatch } from '../../redux/store'
+import { AuthType } from '../../redux/auth/authTypes'
+import { LoadingStatusTypes } from '../../redux/appTypes'
+import LoadingSpinner from '../ui/LoadingSpinner/LoadingSpinner'
+import { GetResevedLessonsResponceType } from '../../api/apiTypes'
+import { ReservedLessonType } from '../../redux/reservedLessons/reservedLessonsTypes'
+import { getReservedLessons } from '../../redux/reservedLessons/reservedLessonsAsyncActions'
+import AutoCompleteLessons, { ISelectItems } from '../ui/AutoCompleteLessons/AutoCompleteLessons'
 
 const sortTypes = [
-  { name: "За датою проведення  (від нових до старих)", value: "startAt-desc" },
-  { name: "За датою проведення (від старих до нових)", value: "startAt-asc" },
-  { name: "За зменшенням ціни", value: "price-desc" },
-  { name: "За зростанням ціни", value: "price-asc" },
+  { name: 'За датою проведення  (від нових до старих)', value: 'startAt-desc' },
+  { name: 'За датою проведення (від старих до нових)', value: 'startAt-asc' },
+  { name: 'За зменшенням ціни', value: 'price-desc' },
+  { name: 'За зростанням ціни', value: 'price-asc' },
 ]
 
 interface ILessonsFilterProps {
@@ -82,14 +79,14 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
         <LoadingSpinner />
       ) : (
         <>
-          <h2 className={styles["filter-title"]}>Мої уроки</h2>
+          <h2 className={styles['filter-title']}>Мої уроки</h2>
 
-          <div className={styles["filter-item"]}>
+          <div className={styles['filter-item']}>
             <b>Дисципліна:</b>
             <AutoCompleteLessons
               name="name"
               selectList={allLessonsSelect}
-              value={String(filter.name || "")}
+              value={String(filter.name || '')}
               onChange={(e) => setFilter((prev) => ({ ...prev, name: e.value }))}
               onSelect={(e) => setFilter((prev) => ({ ...prev, name: e.value.label }))}
             />
@@ -123,13 +120,13 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
             </div>
           )} */}
 
-          <div className={styles["radio-group"]}>
+          <div className={styles['radio-group']}>
             {[
-              { label: "Всі", type: "" },
-              { label: "Заплановані", type: "planned" },
-              { label: "Проведені", type: "conducted" },
+              { label: 'Всі', type: '' },
+              { label: 'Заплановані', type: 'planned' },
+              { label: 'Проведені', type: 'conducted' },
             ].map((el) => (
-              <div className={styles["radio-button"]} key={el.type}>
+              <div className={styles['radio-button']} key={el.type}>
                 <RadioButton
                   name="status"
                   value={el.type}
@@ -137,32 +134,33 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
                   checked={filter.status === el.type}
                   onChange={(e) => setFilter((prev) => ({ ...prev, status: e.value }))}
                 />
-                <label htmlFor={el.type} className={styles["radio-label"]}>
+                <label htmlFor={el.type} className={styles['radio-label']}>
                   {el.label}
                 </label>
               </div>
             ))}
           </div>
 
-          <div className={styles["filter-item"]}>
+          <div className={styles['filter-item']}>
             <b>Сортувати за:</b>
             <br />
             <Dropdown
               optionLabel="name"
               options={sortTypes}
               value={filter.sortBy}
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               placeholder="Сортувати за"
               onChange={(e) => setFilter((prev) => ({ ...prev, sortBy: e.value }))}
             />
           </div>
 
+          <b>Сторінка:</b>
           <Paginator
             // current showed page
             rows={filter.pageSize}
             // total items count
             totalRecords={totalLessons}
-            style={{ marginBottom: "20px" }}
+            style={{ marginBottom: '20px' }}
             onPageChange={(e) => onPageChange(e)}
             // index of first item in current showed page
             first={filter.currentPage * filter.pageSize - 1}
@@ -172,13 +170,13 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
           <Button
             label="Знайти"
             onClick={findLessons}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             disabled={loadingStatus === LoadingStatusTypes.LOADING}
           />
           <Button
             outlined
             label="Очистити фільтр"
-            style={{ width: "100%", marginTop: "20px" }}
+            style={{ width: '100%', marginTop: '20px' }}
             onClick={() => setFilter(filterInititalState)}
             disabled={loadingStatus === LoadingStatusTypes.LOADING}
           />
