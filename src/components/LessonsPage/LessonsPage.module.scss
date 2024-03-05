@@ -137,9 +137,16 @@
 .modal-lesson-status {
   margin-bottom: 16px;
 
-  & [role='button'] {
+  & [role="button"] {
     width: 50% !important;
   }
+}
+
+.lesson-card-actions {
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 /* file */
@@ -196,4 +203,34 @@
   width: 160px;
   text-align: center;
   white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .wrapper {
+    flex-direction: column;
+  }
+  .filter {
+    width: 40%;
+  }
+  .lesson-card-actions {
+    margin-top: 10px;
+    align-items: flex-start;
+  }
+  .price {
+    text-align: left;
+  }
+}
+
+@media (max-width: 840px) {
+  .filter {
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter {
+    width: 100%;
+    position: static;
+    margin-bottom: 40px;
+  }
 }

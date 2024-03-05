@@ -143,3 +143,43 @@
     width: 300px;
   }
 }
+
+@media (max-width: 1024px) {
+  .wrapper {
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .left-col {
+    max-width: 100%;
+  }
+  .right-col {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lessons-details {
+    flex-wrap: wrap;
+  }
+  .lesson-col-left {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .left-col-top {
+    flex-direction: column;
+    padding: 0 20px;
+  }
+  .lessons-wrapper {
+    flex-wrap: wrap;
+  }
+  .lesson-col-center {
+    text-align: left;
+  }
+  .wrapper {
+    padding: 20px 0;
+  }
+}

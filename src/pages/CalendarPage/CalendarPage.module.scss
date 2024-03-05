@@ -2,7 +2,6 @@
   max-width: 1900px;
   margin: 0 auto;
   padding: 20px;
-
   display: flex;
   gap: 20px;
 }
@@ -70,4 +69,26 @@
 
 .date {
   margin: 0;
+}
+
+@media (max-width: 840px) {
+  .container {
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+  }
+  .lesson-info {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 20px 0;
+  }
+
+  .calendar-wrapper {
+    [data-pc-section="body"] {
+      padding: 0;
+    }
+  }
 }

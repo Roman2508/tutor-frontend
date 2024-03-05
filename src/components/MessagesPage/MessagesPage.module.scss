@@ -1,9 +1,5 @@
-.wrapper {
-}
-
 .messages {
   padding: 0 10px;
-  //   max-height: 43vh;
   height: 100%;
   max-height: calc(100vh - 370px);
   min-height: calc(100vh - 370px);
@@ -36,4 +32,10 @@
   position: absolute;
   bottom: 5px;
   font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .message {
+    max-width: 100%;
+  }
 }
