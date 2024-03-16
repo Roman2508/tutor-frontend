@@ -66,7 +66,7 @@ const EditReservedLessonPage: React.FC<EditReservedLessonPage> = ({
 
   return (
     <Dialog
-      header="Залишити відгук"
+      header="Редагувати урок"
       visible={visible}
       style={{ width: "360px" }}
       onHide={() => setVisible(false)}
