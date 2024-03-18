@@ -118,9 +118,7 @@ export const uploadAvatar = createAsyncThunk('auth/uploadAvatar', async (file: F
 
   try {
     const { data } = await filesAPI.uploadAvatar(file)
-    thunkAPI.dispatch(
-      setAppAlert({ message: 'Фото оновлено, перезавантажте сторінку щоб побачити зміни', status: 'success' })
-    )
+    thunkAPI.dispatch(setAppAlert({ message: 'Фото оновлено', status: 'success' }))
     thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.SUCCESS))
     return data
   } catch (error: any) {
