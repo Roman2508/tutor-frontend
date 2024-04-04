@@ -19,8 +19,8 @@ import AutoCompleteLessons from '../ui/AutoCompleteLessons/AutoCompleteLessons'
 const sortTypes = [
   { name: 'За зменшенням ціни', value: 'price-desc' },
   { name: 'За зростанням ціни', value: 'price-asc' },
-  { name: 'За кількістю відгуків', value: 'reviews-desc' },
-  { name: 'За найвищим рейтингом', value: 'rating-desc' },
+  // { name: 'За кількістю відгуків', value: 'reviews-desc' },
+  // { name: 'За найвищим рейтингом', value: 'rating-desc' },
 ]
 
 interface ITutorFilterProps {

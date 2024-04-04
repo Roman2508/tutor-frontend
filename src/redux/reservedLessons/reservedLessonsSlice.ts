@@ -27,6 +27,9 @@ const reservedLessonsSlice = createSlice({
     setLoadingStatus(state, action) {
       state.loadingStatus = action.payload
     },
+    clearReservedLesson(state) {
+      state.fullLesson = null
+    },
   },
   extraReducers: (builder) => {
     /* getReservedLessons */
@@ -101,7 +104,7 @@ const reservedLessonsSlice = createSlice({
   },
 })
 
-export const { setLoadingStatus } = reservedLessonsSlice.actions
+export const { setLoadingStatus, clearReservedLesson } = reservedLessonsSlice.actions
 
 export default reservedLessonsSlice.reducer
 

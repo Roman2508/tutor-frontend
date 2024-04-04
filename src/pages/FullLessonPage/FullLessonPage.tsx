@@ -17,7 +17,10 @@ import { LoadingStatusTypes } from "../../redux/appTypes"
 import { authSelector } from "../../redux/auth/authSlice"
 import UploadFile from "../../components/LessonsPage/UploadFile"
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
-import { reservedLessonsSelector } from "../../redux/reservedLessons/reservedLessonsSlice"
+import {
+  clearReservedLesson,
+  reservedLessonsSelector,
+} from "../../redux/reservedLessons/reservedLessonsSlice"
 import { getReservedLessonById } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
 import { FileType, ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
 
@@ -63,6 +66,12 @@ const FullLessonPage = () => {
     }
 
     fetchData()
+
+    return () => {
+      setTutorFiles([])
+      setStudentFiles([])
+      dispatch(clearReservedLesson())
+    }
   }, [params.id])
 
   if (
