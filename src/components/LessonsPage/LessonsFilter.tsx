@@ -43,7 +43,6 @@ const LessonsFilter: React.FC<ILessonsFilterProps> = ({
   setFilter,
   totalLessons,
   loadingStatus,
-  allUsersSelect,
   setTotalLessons,
   reservedLessons,
   allLessonsSelect,

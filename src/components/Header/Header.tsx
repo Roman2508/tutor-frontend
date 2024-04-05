@@ -1,6 +1,5 @@
 import React from "react"
 import cn from "classnames"
-import { Menu } from "primereact/menu"
 import { useSelector } from "react-redux"
 import { RxHamburgerMenu } from "react-icons/rx"
 import { OverlayPanel } from "primereact/overlaypanel"

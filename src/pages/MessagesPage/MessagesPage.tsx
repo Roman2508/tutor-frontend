@@ -4,20 +4,19 @@ import { Card } from "primereact/card"
 import { useSelector } from "react-redux"
 import { Button } from "primereact/button"
 import { Divider } from "primereact/divider"
-import { BsThreeDots } from "react-icons/bs"
 import { Link, useParams } from "react-router-dom"
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md"
 
 import styles from "./MessagesPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
+import Error from "../../components/ui/Error/Error"
 import Avatar from "../../components/ui/Avatar/Avatar"
 import { authSelector } from "../../redux/auth/authSlice"
+import { LoadingStatusTypes } from "../../redux/appTypes"
 import Message from "../../components/MessagesPage/Message"
+import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
 import { clearMessages, dialogsSelector } from "../../redux/dialogs/dialogsSlice"
 import { deleteDialog, getDialogs } from "../../redux/dialogs/dialogsAsyncActions"
-import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
-import { LoadingStatusTypes } from "../../redux/appTypes"
-import Error from "../../components/ui/Error/Error"
 
 const MessagesPage = () => {
   const params = useParams()

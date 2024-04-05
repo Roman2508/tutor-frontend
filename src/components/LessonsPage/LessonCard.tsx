@@ -1,5 +1,4 @@
 import React from "react"
-import dayjs from "dayjs"
 import cn from "classnames"
 import { Card } from "primereact/card"
 import { Link } from "react-router-dom"
@@ -10,9 +9,9 @@ import Avatar from "../ui/Avatar/Avatar"
 import { Button } from "primereact/button"
 import styles from "./LessonsPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
+import { customDayjs } from "../Calendar/Calendar"
 import { ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
 import { deleteReservedLesson } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
-import { customDayjs } from "../Calendar/Calendar"
 
 interface ILessonCardProps {
   lesson: ReservedLessonType

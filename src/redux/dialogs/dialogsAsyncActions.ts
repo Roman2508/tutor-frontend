@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CreateDialogType, CreateMessageType, DeleteDialogType, GetDialogsType } from '../../api/apiTypes'
-import { setAppAlert } from '../appStatus/appStatusSlice'
-import { setLoadingStatus } from './dialogsSlice'
+
 import { LoadingStatusTypes } from '../appTypes'
+import { setLoadingStatus } from './dialogsSlice'
 import { dialogsAPI, messagesAPI } from '../../api/api'
+import { setAppAlert } from '../appStatus/appStatusSlice'
+import { CreateDialogType, CreateMessageType, DeleteDialogType, GetDialogsType } from '../../api/apiTypes'
 
 export const getDialogs = createAsyncThunk('dialogs/getDialogs', async (payload: GetDialogsType, thunkAPI) => {
   thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.LOADING))

@@ -1,16 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { LoadingStatusTypes } from "../appTypes"
-import { DialogType, InitialStateType, MessageType } from "./dialogsTypes"
-import { RootState } from "../store"
+
 import {
-  createDialog,
-  createMessage,
-  deleteDialog,
-  deleteMessages,
   getDialogs,
   getMessages,
+  createDialog,
+  deleteDialog,
+  createMessage,
+  deleteMessages,
   updateIsReading,
 } from "./dialogsAsyncActions"
+import { RootState } from "../store"
+import { LoadingStatusTypes } from "../appTypes"
+import { DialogType, InitialStateType, MessageType } from "./dialogsTypes"
 
 const dialogsInitialState: InitialStateType = {
   dialogs: null,

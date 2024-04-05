@@ -1,17 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
+import {
+  authMe,
+  authLogin,
+  updateTutor,
+  authRegister,
+  uploadAvatar,
+  updateStudent,
+} from "./authAsyncActions"
 import { RootState } from "../store"
 import { LoadingStatusTypes } from "../appTypes"
-import { AuthType, InitialStateType } from "./authTypes"
-import {
-  authLogin,
-  authMe,
-  authRegister,
-  updateStudent,
-  updateTutor,
-  uploadAvatar,
-} from "./authAsyncActions"
 import { AuthResponceType } from "../../api/apiTypes"
+import { AuthType, InitialStateType } from "./authTypes"
 
 const authInitialState: InitialStateType = {
   auth: null,

@@ -1,10 +1,10 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import uk from 'dayjs/locale/uk'
+import { toast } from 'react-toastify'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Calendar as CalendarComponent, dayjsLocalizer, Event, SlotInfo } from 'react-big-calendar'
-import { toast } from 'react-toastify'
 
 dayjs.locale(uk)
 

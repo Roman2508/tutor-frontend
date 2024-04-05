@@ -5,11 +5,11 @@ import { io } from "socket.io-client"
 import { Button } from "primereact/button"
 import { InputTextarea } from "primereact/inputtextarea"
 
+import { useSelector } from "react-redux"
 import styles from "./MessagesPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
-import { getMessages } from "../../redux/dialogs/dialogsAsyncActions"
 import LoadingSpinner from "../ui/LoadingSpinner/LoadingSpinner"
-import { useSelector } from "react-redux"
+import { getMessages } from "../../redux/dialogs/dialogsAsyncActions"
 import { addMessage, dialogsSelector } from "../../redux/dialogs/dialogsSlice"
 
 interface IMessageProps {

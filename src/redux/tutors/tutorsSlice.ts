@@ -2,10 +2,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 import { RootState } from "../store"
 import { LoadingStatusTypes } from "../appTypes"
+import { LessonType } from "../lessons/lessonsType"
 import { InitialStateType, ReviewsType, TutorType } from "./tutorsTypes"
 import { createReviews, deleteReviews, getTutor } from "./tutorsAsyncActions"
 import { createLesson, deleteLesson, updateLesson } from "../lessons/lessonsAsyncActions"
-import { LessonType } from "../lessons/lessonsType"
 
 const lessonsInitialState: InitialStateType = {
   tutor: null,

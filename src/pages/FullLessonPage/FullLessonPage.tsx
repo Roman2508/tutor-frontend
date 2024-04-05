@@ -7,6 +7,10 @@ import { Button } from "primereact/button"
 import { Divider } from "primereact/divider"
 import { useParams } from "react-router-dom"
 
+import {
+  clearReservedLesson,
+  reservedLessonsSelector,
+} from "../../redux/reservedLessons/reservedLessonsSlice"
 import styles from "./FullLessonPage.module.scss"
 import { useAppDispatch } from "../../redux/store"
 import Error from "../../components/ui/Error/Error"
@@ -17,10 +21,6 @@ import { LoadingStatusTypes } from "../../redux/appTypes"
 import { authSelector } from "../../redux/auth/authSlice"
 import UploadFile from "../../components/LessonsPage/UploadFile"
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner"
-import {
-  clearReservedLesson,
-  reservedLessonsSelector,
-} from "../../redux/reservedLessons/reservedLessonsSlice"
 import { getReservedLessonById } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
 import { FileType, ReservedLessonType } from "../../redux/reservedLessons/reservedLessonsTypes"
 

@@ -1,10 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { setAppAlert } from '../appStatus/appStatusSlice'
+
+import { TutorType } from './tutorsTypes'
 import { setLoadingStatus } from './tutorsSlice'
 import { LoadingStatusTypes } from '../appTypes'
 import { reviewsAPI, tutorsAPI } from '../../api/api'
 import { CreateReviewsType } from '../../api/apiTypes'
-import { TutorType } from './tutorsTypes'
+import { setAppAlert } from '../appStatus/appStatusSlice'
 
 export const getTutor = createAsyncThunk('lessons/getTutor', async (id: number, thunkAPI): Promise<TutorType> => {
   thunkAPI.dispatch(setLoadingStatus(LoadingStatusTypes.LOADING))

@@ -19,9 +19,9 @@ import { FaRegImages as SelectFilesIcon } from "react-icons/fa"
 
 import { useAppDispatch } from "../../redux/store"
 import { AuthType } from "../../redux/auth/authTypes"
+import { FileType } from "../../redux/reservedLessons/reservedLessonsTypes"
 import { uploadFile } from "../../redux/reservedLessons/reservedLessonsAsyncActions"
 import { transliterateCyrillicToLatin } from "../../helpers/transliterateCyrillicToLatin"
-import { FileType } from "../../redux/reservedLessons/reservedLessonsTypes"
 
 interface IUploadFileProps {
   auth: AuthType

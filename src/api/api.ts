@@ -1,46 +1,45 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import axios, { InternalAxiosRequestConfig } from "axios"
 
 import {
   AuthMeType,
   AuthLoginType,
+  UploadFileType,
   GetDialogsType,
+  UpdateTutorType,
   AuthRegisterType,
   CreateDialogType,
+  AuthResponceType,
+  UpdateLessonType,
+  CreateLessonType,
+  UpdateStudentType,
   CreateMessageType,
   CreateReviewsType,
   LessonsFilterType,
+  GetLessonsResponce,
+  PaymentResponseType,
+  CheckIsDialogExistType,
   ReservedLessonsFilterType,
   UpdateReservedLessonsType,
   CreateReservedLessonsType,
-  CreateLessonType,
-  UpdateLessonType,
-  GetLessonsResponce,
-  UpdateTutorType,
-  UpdateStudentType,
-  AuthResponceType,
   GetResevedLessonsResponceType,
-  UploadFileType,
-  PaymentResponseType,
-  CheckIsDialogExistType,
-} from './apiTypes'
-import { AuthType } from '../redux/auth/authTypes'
-import { LessonType } from '../redux/lessons/lessonsType'
-import { DialogType, MessageType } from '../redux/dialogs/dialogsTypes'
-import { ReviewsType, TutorType } from '../redux/tutors/tutorsTypes'
-import { FileType, ReservedLessonType } from '../redux/reservedLessons/reservedLessonsTypes'
+} from "./apiTypes"
+import { AuthType } from "../redux/auth/authTypes"
+import { LessonType } from "../redux/lessons/lessonsType"
+import { ReviewsType, TutorType } from "../redux/tutors/tutorsTypes"
+import { DialogType, MessageType } from "../redux/dialogs/dialogsTypes"
+import { FileType, ReservedLessonType } from "../redux/reservedLessons/reservedLessonsTypes"
 
 const instanse = axios.create({
-  baseURL: 'http://localhost:7777/',
+  baseURL: "http://localhost:7777/",
 })
 
 // Якщо є токен, вшиваю його в конфігурацію axios
 // @ts-ignore
 instanse.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = window.localStorage.getItem('tutor-token')
+  const token = window.localStorage.getItem("tutor-token")
 
   if (config.headers && token) {
     config.headers.Authorization = String(`Bearer ${token}`)
-    // config.headers.Authorization = String(window.localStorage.getItem('token'))
   }
 
   return config
@@ -48,13 +47,13 @@ instanse.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 export const authAPI = {
   login(payload: AuthLoginType) {
-    return instanse.post<AuthResponceType>('/auth/login', payload)
+    return instanse.post<AuthResponceType>("/auth/login", payload)
   },
   register(payload: AuthRegisterType) {
-    return instanse.post<AuthResponceType>('/auth/register', payload)
+    return instanse.post<AuthResponceType>("/auth/register", payload)
   },
   getMe(payload: AuthMeType) {
-    return instanse.post<AuthType>('/auth/me', payload)
+    return instanse.post<AuthType>("/auth/me", payload)
   },
 
   updateTutor(payload: UpdateTutorType) {
@@ -69,10 +68,10 @@ export const authAPI = {
 
 export const lessonsAPI = {
   getAll(payload: LessonsFilterType) {
-    return instanse.post<GetLessonsResponce>('/lessons/get', payload)
+    return instanse.post<GetLessonsResponce>("/lessons/get", payload)
   },
   create(payload: CreateLessonType) {
-    return instanse.post<LessonType>('/lessons', payload)
+    return instanse.post<LessonType>("/lessons", payload)
   },
   update(payload: UpdateLessonType) {
     const { id, ...rest } = payload
@@ -112,7 +111,7 @@ export const messagesAPI = {
     return instanse.get<MessageType[]>(`/messages/${id}`)
   },
   create(payload: CreateMessageType) {
-    return instanse.post<MessageType>('/messages', payload)
+    return instanse.post<MessageType>("/messages", payload)
   },
   updateIsReading(id: number) {
     return instanse.patch<MessageType>(`/messages/${id}`)
@@ -124,7 +123,7 @@ export const messagesAPI = {
 
 export const reviewsAPI = {
   async create(payload: CreateReviewsType) {
-    return instanse.post<ReviewsType>('/reviews', payload)
+    return instanse.post<ReviewsType>("/reviews", payload)
   },
   remove(id: number) {
     return instanse.delete<number>(`/reviews/${id}`)
@@ -133,14 +132,14 @@ export const reviewsAPI = {
 
 export const reservedLessonsAPI = {
   getAll(payload: ReservedLessonsFilterType) {
-    return instanse.post<GetResevedLessonsResponceType>('/reserved-lessons/get', payload)
+    return instanse.post<GetResevedLessonsResponceType>("/reserved-lessons/get", payload)
   },
   getOneById(id: number) {
     return instanse.get<ReservedLessonType>(`/reserved-lessons/${id}`)
   },
   // not for frontend
   create(payload: CreateReservedLessonsType) {
-    return instanse.post<ReservedLessonType>('/reserved-lessons', payload)
+    return instanse.post<ReservedLessonType>("/reserved-lessons", payload)
   },
   update(payload: UpdateReservedLessonsType) {
     const { id, ...data } = payload
@@ -157,22 +156,24 @@ export const reservedLessonsAPI = {
 export const filesAPI = {
   upload(payload: UploadFileType) {
     const { lessonId, file } = payload
-    const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+    const config = { headers: { "Content-Type": "multipart/form-data" } }
     return instanse.post<FileType>(`/files/${lessonId}`, file, config)
   },
 
   download(filename: string) {
-    const config = { responseType: 'blob' }
+    const config = { responseType: "blob" }
     // @ts-ignore
     return instanse.get(`files/download/${filename}`, config)
   },
 
   uploadAvatar(file: FormData) {
-    const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+    const config = { headers: { "Content-Type": "multipart/form-data" } }
     return instanse.post<{ avatarUrl: string }>(`/files/avatar`, file, config)
   },
 
   delete(payload: { filename: string; fileId: number }) {
-    return instanse.delete<{ id: number; filename: string }>(`/files/${payload.filename}/${payload.fileId}`)
+    return instanse.delete<{ id: number; filename: string }>(
+      `/files/${payload.filename}/${payload.fileId}`
+    )
   },
 }

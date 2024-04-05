@@ -6,16 +6,15 @@ import { Button } from "primereact/button"
 import { Message } from "primereact/message"
 import { Dropdown } from "primereact/dropdown"
 import { useNavigate } from "react-router-dom"
-import { Password } from "primereact/password"
 import { InputText } from "primereact/inputtext"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 
+import { emailPattern } from "./emailPattern"
 import { useAppDispatch } from "../../redux/store"
 import { authSelector } from "../../redux/auth/authSlice"
 import { LoadingStatusTypes } from "../../redux/appTypes"
 import styles from "../../pages/AuthPage/AuthPage.module.scss"
 import { authRegister } from "../../redux/auth/authAsyncActions"
-import { emailPattern } from "./emailPattern"
 
 interface IAuthFilds {
   name: string
