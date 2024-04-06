@@ -30,7 +30,7 @@ import { DialogType, MessageType } from "../redux/dialogs/dialogsTypes"
 import { FileType, ReservedLessonType } from "../redux/reservedLessons/reservedLessonsTypes"
 
 const instanse = axios.create({
-  baseURL: "http://localhost:7777/",
+  baseURL: import.meta.env.VITE_API_URL,
 })
 
 // Якщо є токен, вшиваю його в конфігурацію axios

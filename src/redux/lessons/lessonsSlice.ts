@@ -18,6 +18,9 @@ const lessonsSlice = createSlice({
     setLoadingStatus(state, action) {
       state.loadingStatus = action.payload
     },
+    clearLesson(state) {
+      state.lessons = null
+    },
   },
   extraReducers: (builder) => {
     /* getLessons */
@@ -48,7 +51,7 @@ const lessonsSlice = createSlice({
   },
 })
 
-export const { setLoadingStatus } = lessonsSlice.actions
+export const { setLoadingStatus, clearLesson } = lessonsSlice.actions
 
 export default lessonsSlice.reducer
 
